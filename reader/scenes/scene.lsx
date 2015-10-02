@@ -22,7 +22,7 @@
 
 <ILLUMINATION>
     <ambient r="0.1" g="0.1" b="0.1" a="0.1" />            <!-- global ambient -->
-    <background r="0.0" g="1.0" b="0.0" a="1.0" />         <!-- background color -->
+    <background r="1.0" g="1.0" b="1.0" a="1.0" />         <!-- background color -->
 </ILLUMINATION>
 
 

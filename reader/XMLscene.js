@@ -20,7 +20,7 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-	this.axis=new CGFaxis(this);
+	this.axis = new CGFaxis(this);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -36,6 +36,7 @@ XMLscene.prototype.initLights = function () {
 
 XMLscene.prototype.initCameras = function () {
     this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {

@@ -7,6 +7,7 @@ function MySceneGraph(filename, scene) {
 		
 	// File reading 
 	this.reader = new CGFXMLreader();
+	this.parser = new LSXParser();
 
 	/*
 	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
@@ -60,15 +61,10 @@ MySceneGraph.prototype.parseIllumination= function(rootElement) {
 	if (elems.length != 1) {
 		return "either zero or more than one 'ILLUMINATION' element found.";
 	}
-
+	var ambient_tag = elems[0].children[0];
 	var background_tag = elems[0].children[1];
-	this.background = [];
-	this.background[0] = background_tag.attributes.getNamedItem("r").value;
-	this.background[1] = background_tag.attributes.getNamedItem("g").value;
-	this.background[2] = background_tag.attributes.getNamedItem("b").value;
-	this.background[3] = background_tag.attributes.getNamedItem("a").value;
-	console.log("R:"+this.background[1]);
-	console.log("A:"+this.background[3])
+	this.background = this.parser.getRGB(background_tag);
+	this.ambient = this.parser.get
 }
 	
 /*
