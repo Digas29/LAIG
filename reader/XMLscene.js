@@ -26,10 +26,6 @@ XMLscene.prototype.init = function (application) {
 XMLscene.prototype.initLights = function () {
 
     this.shader.bind();
-
-	this.lights[0].setPosition(2, 3, 3, 1);
-    this.lights[0].setDiffuse(1.0,1.0,1.0,1.0);
-    this.lights[0].update();
  
     this.shader.unbind();
 };
@@ -50,9 +46,22 @@ XMLscene.prototype.setDefaultAppearance = function () {
 // As loading is asynchronous, this may be called already after the application has started the run loop
 XMLscene.prototype.onGraphLoaded = function () 
 {
+	//INITIALS BLOCK
+	this.camera.near = this.graph.near;
+	this.camera.far = this.graph.far;
+	this.camera.setPosition(vec3.fromValues(this.graph.translation[0], this.graph.translation[1], this.graph.translation[2]));
+	this.camera.orbit(vec3.fromValues(1,0,0),this.graph.rotationX);
+	this.camera.orbit(vec3.fromValues(0,1,0),this.graph.rotationY);
+	this.camera.orbit(vec3.fromValues(0,0,1),this.graph.rotationZ);
+	this.axis = new CGFaxis(this, this.graph.axisLength);
+
+	//ILLUMINATON BLOCK
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
-	this.lights[0].setVisible(true);
-    this.lights[0].enable();
+	this.setAmbient(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3])
+	
+	
+	//this.lights[0].setVisible(true);
+    //this.lights[0].enable();
 };
 
 XMLscene.prototype.display = function () {
@@ -82,7 +91,7 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk)
 	{
-		this.lights[0].update();
+		//this.lights[0].update();
 	};	
 
     this.shader.unbind();

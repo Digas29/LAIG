@@ -27,7 +27,12 @@ MySceneGraph.prototype.onXMLReady=function()
 	var rootElement = this.reader.xmlDoc.documentElement;
 	
 	// Here should go the calls for different functions to parse the various blocks
-	var error = this.parseIllumination(rootElement);
+	var error = this.parseInitials(rootElement);
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+	error = this.parseIllumination(rootElement);
 	if (error != null) {
 		this.onXMLError(error);
 		return;
@@ -49,7 +54,34 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	if (elems.length != 1) {
 		return "either zero or more than one 'INITIALS' element found.";
 	}
+	var frustum_tag = elems[0].children[0];
+	var translation_tag = elems[0].children[1];
+	for(var i = 2; i < 5; i++){
+		var rotation_tag = elems[0].children[i];
+		var angle = this.parser.getAngle(rotation_tag);
+		var axis = this.parser.getAxis(rotation_tag);
+		switch(axis){
+		case "x":
+			this.rotationX = angle * Math.PI / 180.0 ;
+			break;
+		case "y":
+			this.rotationY = angle * Math.PI / 180.0 ;
+			break;
+		case "z":
+			this.rotationZ = angle * Math.PI / 180.0 ;
+			break;
+		default:
+			console.log("INITIALS rotation on axis " + axis + "is incorrect");
+		}
+	}
+	var scale_tag =  elems[0].children[5];
+	var reference_tag = elems[0].children[6];
 
+	this.near = this.parser.getValue(frustum_tag, "near");
+	this.far = this.parser.getValue(frustum_tag, "far");
+	this.translation = this.parser.getCoords(translation_tag);
+	this.scale = this.parser.getScaleCoords(scale_tag);
+	this.axisLength = this.parser.getValue(reference_tag, "length");
 };
 
 MySceneGraph.prototype.parseIllumination= function(rootElement) {
@@ -64,7 +96,7 @@ MySceneGraph.prototype.parseIllumination= function(rootElement) {
 	var ambient_tag = elems[0].children[0];
 	var background_tag = elems[0].children[1];
 	this.background = this.parser.getRGB(background_tag);
-	this.ambient = this.parser.get
+	this.ambient = this.parser.getRGB(ambient_tag);
 }
 	
 /*
