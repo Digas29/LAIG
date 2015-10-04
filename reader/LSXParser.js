@@ -7,6 +7,15 @@ LSXParser.prototype.getValue = function(tag, nameItem){
 LSXParser.prototype.getString = function(tag, nameItem){
 	return tag.attributes.getNamedItem(nameItem).value;
 }
+LSXParser.prototype.getBoolean = function(tag){
+	 var value = this.getValue(tag,"value");
+	 if(value == 1.0){
+	 	return true;
+	 }
+	 else{
+	 	return false;
+	 }
+}
 LSXParser.prototype.getRGB = function(tag){
 	var RGB = [];
 	RGB[0] = this.getValue(tag, "r");
@@ -34,5 +43,11 @@ LSXParser.prototype.getScaleCoords = function(tag){
 	coords[0] = this.getValue(tag, "sx");
 	coords[1] = this.getValue(tag, "sy");
 	coords[2] = this.getValue(tag, "sz");
+	return coords;
+}
+LSXParser.prototype.getLightPosition = function(tag){
+	var coords = this.getCoords(tag);
+	var w = this.getValue(tag,"w");
+	coords/w;
 	return coords;
 }

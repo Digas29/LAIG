@@ -10,7 +10,7 @@
 <SCENE>
 
 <INITIALS>
-    <frustum near="0.1" far="50.0"/>                      <!-- frustum planes-->
+    <frustum near="0.1" far="500.0"/>                      <!-- frustum planes-->
     <translation x="15.0" y="15.0" z="15.0" />                 <!-- initial translate -->
     <rotation axis="x" angle="0.0" />                  <!-- initial rotation 3 -->
     <rotation axis="y" angle="0.0" />                  <!-- initial rotation 2 -->
@@ -27,9 +27,9 @@
 
 
 <LIGHTS>
-    <LIGHT id="ss">                                    <!-- light identifier -->
-        <enable value ="tt" />                         <!-- enable/disable -->
-        <position x="ff" y="ff" z="ff" w="ff" />       <!-- light position -->
+    <LIGHT id="light1">                                    <!-- light identifier -->
+        <enable value ="1" />                         <!-- enable/disable -->
+        <position x="25.0" y="10.0" z="0.0" w="1.0" />       <!-- light position -->
         <ambient r="ff" g="ff" b="ff" a="ff" />        <!-- ambient component -->
         <diffuse r="ff" g="ff" b="ff" a="ff" />        <!-- diffuse component -->
         <specular r="ff" g="ff" b="ff" a="ff" />       <!-- specular component -->

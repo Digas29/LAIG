@@ -59,6 +59,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
 	this.setAmbient(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3])
 	
+	//LIGHTS BLOCK
 	
 	//this.lights[0].setVisible(true);
     //this.lights[0].enable();

@@ -98,6 +98,30 @@ MySceneGraph.prototype.parseIllumination= function(rootElement) {
 	this.background = this.parser.getRGB(background_tag);
 	this.ambient = this.parser.getRGB(ambient_tag);
 }
+MySceneGraph.prototype.parseLights = function(rootElement) {
+	var elems =  rootElement.getElementsByTagName('LIGHTS');
+	if (elems == null) {
+		return  "LIGHTS element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'LIGHTS' element found.";
+	}
+	var nLights = elems[0].children.length;
+	var lights = [];
+	for(var i = 0; i < nLights; i++){
+		var light = elems[0].children[i];
+		var id = this.parser.getString(light, "id");
+		var enable_tag = light.children[0];
+		var position_tag = light.children[1];
+		var ambient_tag = light.children[2];
+		var diffuse_tag = light.children[3];
+		var specular_tag = light.children[4];
+		var enable = this.parser.getBoolean(enable_tag);
+		var position = this.parse.getLightPosition(position_tag);
+
+	}
+}
 	
 /*
  * Callback to be executed on any read error
