@@ -47,7 +47,14 @@ LSXParser.prototype.getScaleCoords = function(tag){
 }
 LSXParser.prototype.getLightPosition = function(tag){
 	var coords = this.getCoords(tag);
-	var w = this.getValue(tag,"w");
-	coords/w;
+	coords[3] = this.getValue(tag,"w");
 	return coords;
+}
+LSXParser.prototype.getPrimitiveArgs = function(tag){
+	var stringArray = this.getString(tag, "args").match(/[-+]?[0-9]*\.?[0-9]+/g);
+	var valueArray = [];
+	for(var i = 0; i < stringArray.length;i++){
+		valueArray[i] = parseFloat(stringArray[i]);
+	}
+	return valueArray;
 }

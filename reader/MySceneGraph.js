@@ -37,6 +37,26 @@ MySceneGraph.prototype.onXMLReady=function()
 		this.onXMLError(error);
 		return;
 	}
+	error = this.parseLights(rootElement);
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+	error = this.parseTextures(rootElement);
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+	error = this.parseMaterials(rootElement);
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
+	error = this.parsePrimitives(rootElement);
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
 	this.loadedOk=true;
 	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
@@ -107,9 +127,10 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	if (elems.length != 1) {
 		return "either zero or more than one 'LIGHTS' element found.";
 	}
+	this.lights = [];
 	var nLights = elems[0].children.length;
-	var lights = [];
 	for(var i = 0; i < nLights; i++){
+		var lightsValues = [];
 		var light = elems[0].children[i];
 		var id = this.parser.getString(light, "id");
 		var enable_tag = light.children[0];
@@ -117,12 +138,81 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		var ambient_tag = light.children[2];
 		var diffuse_tag = light.children[3];
 		var specular_tag = light.children[4];
-		var enable = this.parser.getBoolean(enable_tag);
-		var position = this.parse.getLightPosition(position_tag);
-
+		lightsValues[0] = this.parser.getBoolean(enable_tag);
+		lightsValues[1] = this.parser.getLightPosition(position_tag);
+		lightsValues[2] = this.parser.getRGB(ambient_tag);
+		lightsValues[3] = this.parser.getRGB(diffuse_tag);
+		lightsValues[4] = this.parser.getRGB(specular_tag);
+		this.lights[i] = lightsValues;
+		console.log("Light with id="+id+ " was processed successfuly.")
 	}
 }
-	
+MySceneGraph.prototype.parseTextures = function(rootElement) {
+	var elems =  rootElement.getElementsByTagName('TEXTURES');
+	if (elems == null) {
+		return  "TEXTURES element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'TEXTURES' element found.";
+	}
+	this.textures = [];
+	var nTextures = elems[0].children.length;
+	for(var i = 0; i < nTextures; i++){
+		var textureInfo = [];
+		var texture_tag = elems[0].children[i];
+		textureInfo[0] = this.parser.getString(texture_tag, "id");
+		var path_tag = texture_tag.children[0];
+		var amp_tag = texture_tag.children[1];
+		textureInfo[1] = this.parser.getString(path_tag, "path");
+		textureInfo[2] = this.parser.getValue(amp_tag, "s");
+		textureInfo[3] = this.parser.getValue(amp_tag, "t");
+		this.textures[i] = textureInfo;
+	}
+}	
+MySceneGraph.prototype.parseMaterials = function(rootElement) {
+	var elems =  rootElement.getElementsByTagName('MATERIALS');
+	if (elems == null) {
+		return  "MATERIALS element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'MATERIALS' element found.";
+	}
+	this.materials = [];
+	var nMaterials = elems[0].children.length;
+	for(var i = 0; i < nMaterials; i++){
+		var materialInfo = [];
+		var material_tag = elems[0].children[i];
+		materialInfo[0] = this.parser.getString(material_tag, "id");
+		var shiness_tag = material_tag.children[0];
+		var specular_tag = material_tag.children[1]
+		var diffuse_tag = material_tag.children[2];
+		var ambient_tag = material_tag.children[3];
+		var emission_tag = material_tag.children[4];
+		materialInfo[1] = this.parser.getValue(shiness_tag, "value");
+		materialInfo[2] = this.parser.getRGB(specular_tag);
+		materialInfo[3] = this.parser.getRGB(diffuse_tag);
+		materialInfo[4] = this.parser.getRGB(ambient_tag);
+		materialInfo[5] = this.parser.getRGB(emission_tag);
+		this.materials[i] = materialInfo;
+	}
+}
+MySceneGraph.prototype.parsePrimitives = function(rootElement) {
+	var elems =  rootElement.getElementsByTagName('LEAVES');
+	if (elems == null) {
+		return  "MATERIALS element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'MATERIALS' element found.";
+	}
+
+	this.rectangle = this.parser.getPrimitiveArgs(elems[0].children[0]);
+	this.cylinder = this.parser.getPrimitiveArgs(elems[0].children[1]);
+	this.sphere = this.parser.getPrimitiveArgs(elems[0].children[2]);
+	this.triangle = this.parser.getPrimitiveArgs(elems[0].children[3]);
+}
 /*
  * Callback to be executed on any read error
  */

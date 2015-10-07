@@ -29,10 +29,18 @@
 <LIGHTS>
     <LIGHT id="light1">                                    <!-- light identifier -->
         <enable value ="1" />                         <!-- enable/disable -->
-        <position x="25.0" y="10.0" z="0.0" w="1.0" />       <!-- light position -->
-        <ambient r="ff" g="ff" b="ff" a="ff" />        <!-- ambient component -->
-        <diffuse r="ff" g="ff" b="ff" a="ff" />        <!-- diffuse component -->
-        <specular r="ff" g="ff" b="ff" a="ff" />       <!-- specular component -->
+        <position x="2.0" y="2.0" z="2.0" w="1.0" />       <!-- light position -->
+        <ambient r="0.0" g="0.0" b="0.0" a="1.0" />        <!-- ambient component -->
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
+    </LIGHT>
+
+    <LIGHT id="light2">                                    <!-- light identifier -->
+        <enable value ="1" />                         <!-- enable/disable -->
+        <position x="5.0" y="5.0" z="5.0" w="1.0" />       <!-- light position -->
+        <ambient r="0.0" g="0.0" b="0.0" a="1.0" />        <!-- ambient component -->
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
     </LIGHT>
 
     <!-- NOTE: this block "LIGHT" must be repeated as necessary with different "id" -->
@@ -41,9 +49,9 @@
 
 
 <TEXTURES>
-    <TEXTURE id="ss">
-        <file path="ss" />                             <!-- path to file -->
-        <amplif_factor s="ff" t="ff" />                <!-- x/s, y/t -->
+    <TEXTURE id="pitch">
+        <file path="textures/pitch.png" />                             <!-- path to file -->
+        <amplif_factor s="1.0" t="1.0" />                <!-- x/s, y/t -->
     </TEXTURE>
 
     <!-- NOTE: this block "TEXTURE" must be repeated as necessary with different "id" -->
@@ -52,12 +60,12 @@
 
 
 <MATERIALS>
-    <MATERIAL id="ss">                                  
-        <shininess value="ff" />
-        <specular r="ff" g="ff" b="ff" a="ff" />        <!-- specular reflection -->
-        <diffuse r="ff" g="ff" b="ff" a="ff" />         <!-- diffuse reflection -->
-        <ambient r="ff" g="ff" b="ff" a="ff" />         <!-- ambient reflection -->
-        <emission r="ff" g="ff" b="ff" a="ff" />        <!-- emission component -->
+    <MATERIAL id="poste">                                  
+        <shininess value="20.0" />
+        <specular r="0.1" g="0.1" b="0.1" a="1.0" />        <!-- specular reflection -->
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />         <!-- diffuse reflection -->
+        <ambient r="0.1" g="0.1" b="0.1" a="1.0" />         <!-- ambient reflection -->
+        <emission r="0.0" g="0.0" b="0.0" a="1.0" />        <!-- emission component -->
     </MATERIAL>
 
     <!-- NOTE: the "MATERIAL" block may be repeated as required. Each defined material requires a distinct "id" -->
@@ -68,10 +76,10 @@
 <LEAVES>
 
     <!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
-    <LEAF id="ss" type="rectangle" args="ff ff ff ff" />
-    <LEAF id="ss" type="cylinder" args="ff ff ff ii ii" /> 
-    <LEAF id="ss" type="sphere" args="ff ii ii" />
-    <LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
+    <LEAF id="rectangle" type="rectangle" args="-0.5 0.5 0.5 -0.5" />
+    <LEAF id="cylinder" type="cylinder" args="1.0 1.0 1.0 10 10" /> 
+    <LEAF id="sphere" type="sphere" args="1.0 10 10" />
+    <LEAF id="triangle" type="triangle" args="1.0 0.0 0.0  0.0 1.0 0.0  0.0 0.0 0.0" />
 
     <!-- Parameters of the above primitives:                                                         -->
         <!--rectangle: 2D coordinates for left-top and right-bottom vertices.                        -->
