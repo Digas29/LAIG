@@ -22,6 +22,7 @@ XMLscene.prototype.init = function (application) {
 
 	this.axis = new CGFaxis(this);
 
+	this.sphere = new MySphere(this, 1.0, 10.0, 10.0);
 	this.rectangle = new MyRectangle(this, -0.5, 0.5, 0.5,-0.5);
 };
 
@@ -128,7 +129,8 @@ XMLscene.prototype.display = function () {
 		for(var i = 0; i < this.graph.lights.length; i++){
 			this.lights[i].update();
 		}
-		this.rectangle.display();
+		this.sphere.display();
+		//this.rectangle.display();
 		
 	};	
 
