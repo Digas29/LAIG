@@ -3,7 +3,7 @@
  * @constructor
  */
 
-function MySphere(scene, radius, slices, stacks) {
+function MySphere(scene, radius, stacks, slices) {
  	CGFobject.call(this,scene);
 	
 	this.radius = radius;
@@ -38,6 +38,7 @@ MySphere.prototype.initBuffers = function() {
         var z = sinPhi * sinTheta;
         var u = 1 - (longNumber / this.slices);
         var v = 1 - (latNumber / this.stacks);
+        var index = latNumber * this.slices + longNumber;
 
         this.normals.push(x);
         this.normals.push(y);
@@ -47,21 +48,12 @@ MySphere.prototype.initBuffers = function() {
         this.vertices.push(this.radius * x);
         this.vertices.push(this.radius * y);
         this.vertices.push(this.radius * z);
+        if(longNumber != this.slices && latNumber != this.stacks){
+        	this.indices.push(index , index + this.slices + 1, index + this.slices);
+ 			this.indices.push(index, index + 1, index + this.slices +1);
+        }
       }
     }
-    for(j = 0; j < this.stacks; j++){
- 	  for(i = 0; i < this.slices; i++){
- 			var index = j * this.slices + i;
- 			if((index + this.slices + 1) % this.slices == 0){
- 				this.indices.push(index + 1, index, index - this.slices + 1);
- 				this.indices.push(index, index + 1 , index + this.slices);
- 			}
- 			else{
- 				this.indices.push(index + 1, index + this.slices + 1, index + this.slices);
- 				this.indices.push(index, index + 1 , index + this.slices);
- 			}
- 		};
- 	};
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();

@@ -20,10 +20,13 @@ XMLscene.prototype.init = function (application) {
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+    this.enableTextures(true);
+
 	this.axis = new CGFaxis(this);
 
-	this.sphere = new MySphere(this, 1.0, 10.0, 10.0);
+	this.sphere = new MySphere(this, 0.5, 50.0, 50.0);
 	this.rectangle = new MyRectangle(this, -0.5, 0.5, 0.5,-0.5);
+	this.cylinder = new MyCylinder(this, 5, 0.5, 0.1, 50.0, 50.0);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -39,9 +42,9 @@ XMLscene.prototype.initCameras = function () {
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
-    this.setAmbient(0.2, 0.4, 0.8, 1.0);
-    this.setDiffuse(0.2, 0.4, 0.8, 1.0);
-    this.setSpecular(0.2, 0.4, 0.8, 1.0);
+    this.setAmbient(0.2, 0.2, 0.2, 1.0);
+    this.setDiffuse(0.2, 0.2, 0.2, 1.0);
+    this.setSpecular(0.2, 0.2, 0.2, 1.0);
     this.setShininess(10.0);	
 };
 
@@ -60,7 +63,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	//ILLUMINATON BLOCK
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
-	this.setAmbient(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3])
+	this.setAmbient(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3]);
 	
 	
 	//LIGHTS BLOCK
@@ -129,8 +132,12 @@ XMLscene.prototype.display = function () {
 		for(var i = 0; i < this.graph.lights.length; i++){
 			this.lights[i].update();
 		}
-		this.sphere.display();
-		//this.rectangle.display();
+		this.rotate(-Math.PI /2.0, 1,0,0);
+		this.translate(3,-3, 0);
+		this.cylinder.display();
+		this.textures["pitch"].bind();
+		this.rectangle.display();
+		this.textures["pitch"].unbind();
 		
 	};	
 
