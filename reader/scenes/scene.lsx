@@ -11,7 +11,7 @@
 
 <INITIALS>
     <frustum near="0.1" far="500.0"/>                      <!-- frustum planes-->
-    <translation x="15.0" y="15.0" z="15.0" />                 <!-- initial translate -->
+    <translation x="75.0" y="15.0" z="100.0" />                 <!-- initial translate -->
     <rotation axis="x" angle="0.0" />                  <!-- initial rotation 3 -->
     <rotation axis="y" angle="0.0" />                  <!-- initial rotation 2 -->
     <rotation axis="z" angle="0.0" />                  <!-- initial rotation 1 -->
@@ -29,16 +29,45 @@
 <LIGHTS>
     <LIGHT id="light1">                                    <!-- light identifier -->
         <enable value ="1" />                         <!-- enable/disable -->
-        <position x="2.0" y="2.0" z="2.0" w="1.0" />       <!-- light position -->
-        <ambient r="0.0" g="0.0" b="0.0" a="1.0" />        <!-- ambient component -->
+        <position x="0.0" y="15.0" z="0.0" w="1.0" />       <!-- light position -->
+        <ambient r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- ambient component -->
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
     </LIGHT>
 
     <LIGHT id="light2">                                    <!-- light identifier -->
+        <enable value ="0" />                         <!-- enable/disable -->
+        <position x="0.0" y="15.0" z="37.5" w="1.0" />       <!-- light position -->
+        <ambient r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- ambient component -->
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
+    </LIGHT>
+    <LIGHT id="light3">                                    <!-- light identifier -->
         <enable value ="1" />                         <!-- enable/disable -->
-        <position x="2.0" y="2.0" z="-2.0" w="1.0" />       <!-- light position -->
-        <ambient r="0.0" g="0.0" b="0.0" a="1.0" />        <!-- ambient component -->
+        <position x="0.0" y="15.0" z="75.0" w="1.0" />       <!-- light position -->
+        <ambient r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- ambient component -->
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
+    </LIGHT>
+    <LIGHT id="light4">                                    <!-- light identifier -->
+        <enable value ="1" />                         <!-- enable/disable -->
+        <position x="0.0" y="15.0" z="0.0" w="1.0" />       <!-- light position -->
+        <ambient r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- ambient component -->
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
+    </LIGHT>
+
+    <LIGHT id="light5">                                    <!-- light identifier -->
+        <enable value ="1" />                         <!-- enable/disable -->
+        <position x="50.0" y="15.0" z="37.5" w="1.0" />       <!-- light position -->
+        <ambient r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- ambient component -->
+        <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
+        <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
+    </LIGHT>
+    <LIGHT id="light6">                                    <!-- light identifier -->
+        <enable value ="1" />                         <!-- enable/disable -->
+        <position x="50.0" y="15.0" z="75.0" w="1.0" />       <!-- light position -->
+        <ambient r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- ambient component -->
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
     </LIGHT>
@@ -65,24 +94,24 @@
 
 
 <MATERIALS>
-    <MATERIAL id="poste">                                  
+    <MATERIAL id="branco">                                  
         <shininess value="20.0" />
         <specular r="0.1" g="0.1" b="0.1" a="1.0" />        <!-- specular reflection -->
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />         <!-- diffuse reflection -->
         <ambient r="0.1" g="0.1" b="0.1" a="1.0" />         <!-- ambient reflection -->
-        <emission r="0.0" g="0.0" b="0.0" a="1.0" />        <!-- emission component -->
+        <emission r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- emission component -->
     </MATERIAL>
 
     <MATERIAL id="laranja">                                  
-        <shininess value="20.0" />
+        <shininess value="1.0" />
         <specular r="0.1" g="0.1" b="0.1" a="1.0" />        <!-- specular reflection -->
         <diffuse r="1.0" g="0.5" b="0.0" a="1.0" />         <!-- diffuse reflection -->
-        <ambient r="0.1" g="0.1" b="0.1" a="1.0" />         <!-- ambient reflection -->
+        <ambient r="0.1" g="0.1" b="0.0" a="1.0" />         <!-- ambient reflection -->
         <emission r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- emission component -->
     </MATERIAL>
     
     <MATERIAL id="amarelo">                                  
-        <shininess value="10.0" />
+        <shininess value="1.0" />
         <specular r="0.1" g="0.1" b="0.1" a="1.0" />        <!-- specular reflection -->
         <diffuse r="1.0" g="1.0" b="0.0" a="1.0" />         <!-- diffuse reflection -->
         <ambient r="0.1" g="0.1" b="0.1" a="1.0" />         <!-- ambient reflection -->
@@ -99,7 +128,7 @@
     <!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
     <LEAF id="rectangle" type="rectangle" args="-0.5 0.5 0.5 -0.5" />
     <LEAF id="cylinder" type="cylinder" args="1.0 0.5 0.5 30 30" /> 
-    <LEAF id="sphere" type="sphere" args="1.0 10 10" />
+    <LEAF id="sphere" type="sphere" args="0.5 30 30" />
     <LEAF id="triangle" type="triangle" args="1.0 0.0 0.0  0.0 1.0 0.0  0.0 0.0 0.0" />
 
     <!-- Parameters of the above primitives:                                                         -->
@@ -115,8 +144,19 @@
 
     <ROOT id="Campo de Futebol" />     <!-- identifier of root node of the scene graph; this node     -->
                          <!--   must be defined in one of the following NODE declarations -->
-
     <NODE id="Campo de Futebol">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="campo" />
+
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="campo">
 
         <MATERIAL id="null" />
         <TEXTURE id="null" />
@@ -128,16 +168,18 @@
             <DESCENDANT id="bandeira de canto 2" />
             <DESCENDANT id="bandeira de canto 3" />
             <DESCENDANT id="bandeira de canto 4" />
+            <DESCENDANT id="baliza 1" />
+            <DESCENDANT id="baliza 2" />
         </DESCENDANTS>
 
     </NODE>
 
     <NODE id="bola">
 
-        <MATERIAL id="null" />
+        <MATERIAL id="branco" />
         <TEXTURE id="ball" />
 
-        <TRANSLATION x="25.0" y="0.5" z="25.0" />
+        <TRANSLATION x="25.0" y="0.5" z="47.5" />
 
         <DESCENDANTS>
             <DESCENDANT id="sphere" />
@@ -147,10 +189,10 @@
 
     <NODE id="relvado">
 
-        <MATERIAL id="null" />
+        <MATERIAL id="branco" />
         <TEXTURE id="pitch" />
         
-        <SCALE sx="50.0" sy="1.0" sz="75.0" />
+        <SCALE sx="50.0" sy="1.0" sz="95.0" />
         <TRANSLATION x="0.5" y="0.0" z="0.5" />
 
         <DESCENDANTS>
@@ -163,9 +205,8 @@
 
         <MATERIAL id="null" />
         <TEXTURE id="null" />
-        
-        <TRANSLATION x="0.0" y="0.0" z="0.0" />
-        
+        <TRANSLATION x="2.0" y="0.0" z="3.0" />
+        <ROTATION axis="y" angle="-45.0" />
         <DESCENDANTS>
             <DESCENDANT id="bandeira de canto" />
         </DESCENDANTS>
@@ -177,7 +218,8 @@
         <MATERIAL id="null" />
         <TEXTURE id="null" />
         
-        <TRANSLATION x="0.0" y="0.0" z="75.0" />
+        <TRANSLATION x="2.0" y="0.0" z="91.5" />
+        <ROTATION axis="y" angle="45.0" /> 
         
         <DESCENDANTS>
             <DESCENDANT id="bandeira de canto" />
@@ -190,8 +232,8 @@
         <MATERIAL id="null" />
         <TEXTURE id="null" />
         
-        <TRANSLATION x="50.0" y="0.0" z="0.0" />
-        
+        <TRANSLATION x="48.0" y="0.0" z="3.0" />
+        <ROTATION axis="y" angle="-135.0" />
         <DESCENDANTS>
             <DESCENDANT id="bandeira de canto" />
         </DESCENDANTS>
@@ -203,8 +245,8 @@
         <MATERIAL id="null" />
         <TEXTURE id="null" />
         
-        <TRANSLATION x="50.0" y="0.0" z="75.0" />
-        
+        <TRANSLATION x="48.0" y="0.0" z="91.5" />
+        <ROTATION axis="y" angle="135.0" />
         <DESCENDANTS>
             <DESCENDANT id="bandeira de canto" />
         </DESCENDANTS>
@@ -225,7 +267,7 @@
         
     <NODE id="bandeira de canto superior">
 
-        <MATERIAL id="laranja" />
+        <MATERIAL id="null" />
         <TEXTURE id="null" />
 
         <TRANSLATION x="0.125" y="3.0" z="0.0" />
@@ -239,7 +281,7 @@
 
     <NODE id="triangle1">
 
-        <MATERIAL id="null" />
+        <MATERIAL id="laranja" />
         <TEXTURE id="null" />
         
         <DESCENDANTS>
@@ -249,7 +291,7 @@
     </NODE>
     <NODE id="triangle2">
 
-        <MATERIAL id="null" />
+        <MATERIAL id="laranja" />
         <TEXTURE id="null" />
 
         <ROTATION axis="z" angle="-90.0" />
@@ -265,13 +307,193 @@
 
         <MATERIAL id="amarelo" />
         <TEXTURE id="null" />
-		<SCALE sx="0.25" sy="0.25" sz="4" />
 		<ROTATION axis="x" angle="-90.0" />
+		<SCALE sx="0.25" sy="0.25" sz="4" />
         <DESCENDANTS>
             <DESCENDANT id="cylinder" />
         </DESCENDANTS>
 
     </NODE>
+
+    <NODE id="baliza 1">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+
+        <TRANSLATION x="25.0" y="0.0" z="3.0" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="baliza" />
+        </DESCENDANTS>
+
+    </NODE>
+    <NODE id="baliza 2">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+
+        <TRANSLATION x="25.0" y="0.0" z="91.5" />
+        <ROTATION axis="y" angle="180.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="baliza" />
+        </DESCENDANTS>
+    </NODE>
+    <NODE id="baliza">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteEsquerdo" />
+            <DESCENDANT id="posteDireito" />
+            <DESCENDANT id="posteEsquerdoD" />
+            <DESCENDANT id="posteDireitoD" />
+            <DESCENDANT id="baseEsquerda" />
+            <DESCENDANT id="baseDireita" />
+            <DESCENDANT id="baseHorizontal" />
+            <DESCENDANT id="barra" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="posteEsquerdo">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="-3.5" y="0.0" z="0.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteVertical" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="posteDireito">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="3.5" y="0.0" z="0.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteVertical" />
+        </DESCENDANTS>
+
+    </NODE>
+    <NODE id="posteEsquerdoD">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="-3.5" y="0.0" z="0.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteDiagonal" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="posteDireitoD">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="3.5" y="0.0" z="0.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteDiagonal" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="barra">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="-3.5" y="5.0" z="0.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteHorizontalX" />
+        </DESCENDANTS>
+
+    </NODE>
+    <NODE id="baseHorizontal">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="-3.5" y="0.0" z="-3.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteHorizontalX" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="baseEsquerda">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="-3.5" y="0.0" z="-3.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteHorizontalZ" />
+        </DESCENDANTS>
+
+    </NODE>
+    <NODE id="baseDireita">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="3.5" y="0.0" z="-3.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="posteHorizontalZ" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="posteVertical">
+
+        <MATERIAL id="branco" />
+        <TEXTURE id="null" />
+
+        <ROTATION axis="x" angle="-90.0" />
+		<SCALE sx="0.3" sy="0.3" sz="5" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="cylinder" />
+        </DESCENDANTS>
+
+    </NODE>
+
+     <NODE id="posteHorizontalX">
+
+        <MATERIAL id="branco" />
+        <TEXTURE id="null" />
+
+        <ROTATION axis="y" angle="90.0" />
+		<SCALE sx="0.3" sy="0.3" sz="7" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="cylinder" />
+        </DESCENDANTS>
+
+    </NODE>
+     <NODE id="posteHorizontalZ">
+
+        <MATERIAL id="branco" />
+        <TEXTURE id="null" />
+
+		<SCALE sx="0.3" sy="0.3" sz="3.0" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="cylinder" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="posteDiagonal">
+
+        <MATERIAL id="branco" />
+        <TEXTURE id="null" />
+        <TRANSLATION x="0.0" y="0.0" z="-3.0" />
+        <ROTATION axis="x" angle="-59.01" />
+		<SCALE sx="0.3" sy="0.3" sz="5.831" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="cylinder" />
+        </DESCENDANTS>
+
+    </NODE>
+    
 
 </NODES>
 

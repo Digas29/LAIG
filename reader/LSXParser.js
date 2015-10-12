@@ -66,17 +66,18 @@ LSXParser.prototype.getNode = function(tag){
 	var nodeInfo = [];
 	nodeInfo[0] = this.getString(tag.children[0], "id");
 	nodeInfo[1] = this.getString(tag.children[1], "id");
-	var geometry = [];
+	var matrix = mat4.create();
+	mat4.identity(matrix);
 	var i = 2;
 	while(tag.children[i].tagName != 'DESCENDANTS'){
-		var geomTransformation = [];
-		geomTransformation[0] = tag.children[i].tagName;
-		switch(geomTransformation[0]){
+		switch(tag.children[i].tagName){
 		case 'TRANSLATION':
-			geomTransformation[1] = this.getCoords(tag.children[i]);
-			break;
+			var translation = this.getCoords(tag.children[i]);
+			mat4.translate(matrix, matrix, [translation[0],translation[1], translation[2]]);
+			break; 
 		case 'SCALE':
-			geomTransformation[1] = this.getScaleCoords(tag.children[i]);
+			var scale = this.getScaleCoords(tag.children[i]);
+			mat4.scale(matrix, matrix, [scale[0],scale[1], scale[2]]);
 			break;
 		case 'ROTATION':
 			var axis = this.getAxis(tag.children[i]);
@@ -94,20 +95,15 @@ LSXParser.prototype.getNode = function(tag){
 			else if(axis == "z"){
 				rotation[3] = 1.0;
 			}
-			geomTransformation[1] = rotation;
+			mat4.rotate(matrix, matrix, rotation[0], [rotation[1],rotation[2], rotation[3]]);
 			break;
 		default:
 			break;
 		}
-		geometry[i-2] = geomTransformation;
 		i++;
 	}
-
-	if(i==2){
-		geometry = "null";
-	}
-
-	nodeInfo[2] = geometry;
+	nodeInfo[2] = matrix;
+	
 	var descendantTag = tag.children[i];
 	var descendants = [];
 	for(var j = 0; j < descendantTag.children.length; j++){

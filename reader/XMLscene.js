@@ -23,6 +23,7 @@ XMLscene.prototype.init = function (application) {
     this.enableTextures(true);
 
 	this.axis = new CGFaxis(this);
+	this.print = true;
 };
 
 XMLscene.prototype.initLights = function () {
@@ -38,9 +39,10 @@ XMLscene.prototype.initCameras = function () {
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
-    this.setAmbient(1.0, 1.0, 1.0, 1.0);
-    this.setDiffuse(1.0, 1.0, 1.0, 1.0);
-    this.setShininess(10.0);	
+    this.setAmbient(0.1, 0.1, 0.1, 1.0);
+    this.setDiffuse(0.1, 0.1, 0.1, 1.0);
+    this.setSpecular(0.1, 0.1, 0.1, 1.0);
+    this.setShininess(10.0);
 };
 
 // Handler called when the graph is finally loaded. 
@@ -58,7 +60,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 
 	//ILLUMINATON BLOCK
 	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
-	this.setAmbient(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3]);
+	this.setGlobalAmbientLight(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3]);
 	
 	
 	//LIGHTS BLOCK
@@ -67,8 +69,9 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.lights[i].setAmbient(this.graph.lights[i][2][0], this.graph.lights[i][2][1], this.graph.lights[i][2][2],this.graph.lights[i][2][3]);
 		this.lights[i].setDiffuse(this.graph.lights[i][3][0], this.graph.lights[i][3][1], this.graph.lights[i][3][2],this.graph.lights[i][3][3]);
 		this.lights[i].setSpecular(this.graph.lights[i][4][0], this.graph.lights[i][4][1], this.graph.lights[i][4][2],this.graph.lights[i][4][3]);
-		this.lights[i].setVisible(this.graph.lights[i][0]);
-		this.lights[i].enable();
+		this.lights[i].setVisible(true);
+		if(this.graph.lights[i][0] == true)
+			this.lights[i].enable();
 	}
 
 	//TEXTURE BLOCK
@@ -138,35 +141,62 @@ XMLscene.prototype.display = function () {
 		for(var i = 0; i < this.graph.lights.length; i++){
 			this.lights[i].update();
 		}
-		this.pushMatrix();
-		this.translate(0.125,3,0);
-		this.materials['laranja'].apply();
-		this.leaves['triangle'].display();
-		this.popMatrix();
-		this.pushMatrix();
-		this.translate(0.125,3,0);
-		this.rotate(-Math.PI/2.0, 0,0,1);
-		this.rotate(Math.PI, 0,1,0);
-		this.materials['laranja'].apply();
-		this.leaves['triangle'].display();
-		this.popMatrix();
-		this.pushMatrix();
-		this.rotate(-Math.PI/2.0, 1,0,0);
-		this.scale(0.25,0.25,4);
-		this.materials['amarelo'].apply();
-		this.leaves['cylinder'].display();
-		this.popMatrix();
-		this.pushMatrix();
-		this.setDefaultAppearance();
-		this.scale(50,1.0,75);
-		this.translate(0.5,0,0.5);
-		this.textures['pitch'].bind();
-		this.leaves['rectangle'].display();
-		this.popMatrix();
 
-
+		this.drawNodes(this.graph.root, this.graph.nodes[this.graph.root][2],this.graph.nodes[this.graph.root][0], this.graph.nodes[this.graph.root][1]);
+		this.print = false;
 	};	
 
     this.shader.unbind();
 };
+
+XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
+	var nodeInfo = this.graph.nodes[node];
+
+	var materialNode = nodeInfo[0];
+	var textureNode = nodeInfo[1];
+
+	if(materialNode == "null"){
+		materialNode = material;
+	}
+	if(textureNode == "null"){
+		textureNode = texture;
+	}
+	var geoTrans = nodeInfo[2];
+	var descendants = nodeInfo[3];
+
+	var newMatrix = mat4.create();
+	mat4.multiply(newMatrix, matrix, geoTrans);
+	
+
+	for(var i = 0; i < descendants.length; i++){
+		var descendant = descendants[i];
+
+		if(this.leaves[descendant] == null){
+			this.drawNodes(descendant, newMatrix, materialNode, textureNode);
+		}
+		else{
+			this.drawPrimitive(descendant, newMatrix, materialNode, textureNode);
+		}
+	}
+};
+XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, texture){
+	if(material != "null"){
+		this.materials[material].apply();
+	}
+	var texture;
+	if(texture != "null"){
+		texture = this.textures[texture];
+		texture.bind(); 
+	}
+	
+	this.pushMatrix();
+        this.multMatrix(matrix);
+        this.leaves[primitive].display();
+    this.popMatrix();
+    this.setDefaultAppearance();
+    if(texture != "null"){
+		texture.unbind(); 
+	}
+}
+
 
