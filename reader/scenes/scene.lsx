@@ -37,7 +37,7 @@
 
     <LIGHT id="light2">                                    <!-- light identifier -->
         <enable value ="1" />                         <!-- enable/disable -->
-        <position x="5.0" y="5.0" z="5.0" w="1.0" />       <!-- light position -->
+        <position x="2.0" y="2.0" z="-2.0" w="1.0" />       <!-- light position -->
         <ambient r="0.0" g="0.0" b="0.0" a="1.0" />        <!-- ambient component -->
         <diffuse r="1.0" g="1.0" b="1.0" a="1.0" />        <!-- diffuse component -->
         <specular r="1.0" g="1.0" b="1.0" a="1.0" />       <!-- specular component -->
@@ -51,6 +51,11 @@
 <TEXTURES>
     <TEXTURE id="pitch">
         <file path="textures/pitch.png" />                             <!-- path to file -->
+        <amplif_factor s="1.0" t="1.0" />                <!-- x/s, y/t -->
+    </TEXTURE>
+
+    <TEXTURE id="ball">
+        <file path="textures/ball.png" />                             <!-- path to file -->
         <amplif_factor s="1.0" t="1.0" />                <!-- x/s, y/t -->
     </TEXTURE>
 
@@ -68,6 +73,22 @@
         <emission r="0.0" g="0.0" b="0.0" a="1.0" />        <!-- emission component -->
     </MATERIAL>
 
+    <MATERIAL id="laranja">                                  
+        <shininess value="20.0" />
+        <specular r="0.1" g="0.1" b="0.1" a="1.0" />        <!-- specular reflection -->
+        <diffuse r="1.0" g="0.5" b="0.0" a="1.0" />         <!-- diffuse reflection -->
+        <ambient r="0.1" g="0.1" b="0.1" a="1.0" />         <!-- ambient reflection -->
+        <emission r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- emission component -->
+    </MATERIAL>
+    
+    <MATERIAL id="amarelo">                                  
+        <shininess value="10.0" />
+        <specular r="0.1" g="0.1" b="0.1" a="1.0" />        <!-- specular reflection -->
+        <diffuse r="1.0" g="1.0" b="0.0" a="1.0" />         <!-- diffuse reflection -->
+        <ambient r="0.1" g="0.1" b="0.1" a="1.0" />         <!-- ambient reflection -->
+        <emission r="0.0" g="0.0" b="0.0" a="0.0" />        <!-- emission component -->
+    </MATERIAL>
+
     <!-- NOTE: the "MATERIAL" block may be repeated as required. Each defined material requires a distinct "id" -->
 
 </MATERIALS>
@@ -77,7 +98,7 @@
 
     <!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
     <LEAF id="rectangle" type="rectangle" args="-0.5 0.5 0.5 -0.5" />
-    <LEAF id="cylinder" type="cylinder" args="1.0 1.0 1.0 10 10" /> 
+    <LEAF id="cylinder" type="cylinder" args="1.0 0.5 0.5 30 30" /> 
     <LEAF id="sphere" type="sphere" args="1.0 10 10" />
     <LEAF id="triangle" type="triangle" args="1.0 0.0 0.0  0.0 1.0 0.0  0.0 0.0 0.0" />
 
@@ -95,27 +116,159 @@
     <ROOT id="Campo de Futebol" />     <!-- identifier of root node of the scene graph; this node     -->
                          <!--   must be defined in one of the following NODE declarations -->
 
-    <NODE id="ss">       <!--   defines one intermediate node; may be repeated as necessary -->
+    <NODE id="Campo de Futebol">
 
-        <!-- next two lines are mandatory -->
-        <MATERIAL id="ss" />      <!-- declared material superimposes the material received from parent node -->
-                                  <!-- id="null" maintains material from parent node        -->
-        <TEXTURE id="ss" />       <!-- declared texture superimposes the texture received from parent node -->
-                                  <!-- id="null" maintains texture from parent node       -->
-                                  <!-- id="clear" clears texture declaration received from parent node      -->
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
 
-
-        <!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
-        <TRANSLATION x="ff" y="ff" z="ff" />
-        <ROTATION axis="cc" angle="ff" />
-        <SCALE sx="ff" sy="ff" sz="ff" />
-
-
-        <!-- declaring descendents, ate least one node or one leaf must be present -->
         <DESCENDANTS>
-            <DESCENDANT id="ss" />       <!-- "ss" is the identifier of a node or of leaf; -->
-                                         <!-- may be repeatad as necessary. It can refer an -->
-                                         <!-- identifier of another node or leaf, later defined in the lsx file. -->
+            <DESCENDANT id="relvado" />
+            <DESCENDANT id="bola" />
+            <DESCENDANT id="bandeira de canto 1" />
+            <DESCENDANT id="bandeira de canto 2" />
+            <DESCENDANT id="bandeira de canto 3" />
+            <DESCENDANT id="bandeira de canto 4" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="bola">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="ball" />
+
+        <TRANSLATION x="25.0" y="0.5" z="25.0" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="sphere" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="relvado">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="pitch" />
+        
+        <SCALE sx="50.0" sy="1.0" sz="75.0" />
+        <TRANSLATION x="0.5" y="0.0" z="0.5" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="rectangle" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="bandeira de canto 1">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        
+        <TRANSLATION x="0.0" y="0.0" z="0.0" />
+        
+        <DESCENDANTS>
+            <DESCENDANT id="bandeira de canto" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="bandeira de canto 2">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        
+        <TRANSLATION x="0.0" y="0.0" z="75.0" />
+        
+        <DESCENDANTS>
+            <DESCENDANT id="bandeira de canto" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="bandeira de canto 3">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        
+        <TRANSLATION x="50.0" y="0.0" z="0.0" />
+        
+        <DESCENDANTS>
+            <DESCENDANT id="bandeira de canto" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="bandeira de canto 4">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        
+        <TRANSLATION x="50.0" y="0.0" z="75.0" />
+        
+        <DESCENDANTS>
+            <DESCENDANT id="bandeira de canto" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="bandeira de canto">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        
+        <DESCENDANTS>
+            <DESCENDANT id="bandeira de canto superior" />
+            <DESCENDANT id="bandeira de canto inferior" />
+        </DESCENDANTS>
+
+    </NODE>
+        
+    <NODE id="bandeira de canto superior">
+
+        <MATERIAL id="laranja" />
+        <TEXTURE id="null" />
+
+        <TRANSLATION x="0.125" y="3.0" z="0.0" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="triangle1" />
+            <DESCENDANT id="triangle2" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="triangle1">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+        
+        <DESCENDANTS>
+            <DESCENDANT id="triangle" />
+        </DESCENDANTS>
+
+    </NODE>
+    <NODE id="triangle2">
+
+        <MATERIAL id="null" />
+        <TEXTURE id="null" />
+
+        <ROTATION axis="z" angle="-90.0" />
+		<ROTATION axis="y" angle="180.0" />
+
+        <DESCENDANTS>
+            <DESCENDANT id="triangle" />
+        </DESCENDANTS>
+
+    </NODE>
+
+    <NODE id="bandeira de canto inferior">
+
+        <MATERIAL id="amarelo" />
+        <TEXTURE id="null" />
+		<SCALE sx="0.25" sy="0.25" sz="4" />
+		<ROTATION axis="x" angle="-90.0" />
+        <DESCENDANTS>
+            <DESCENDANT id="cylinder" />
         </DESCENDANTS>
 
     </NODE>

@@ -57,6 +57,11 @@ MySceneGraph.prototype.onXMLReady=function()
 		this.onXMLError(error);
 		return;
 	}
+	error = this.parseNodes(rootElement);
+	if (error != null) {
+		this.onXMLError(error);
+		return;
+	}
 	this.loadedOk=true;
 	
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
@@ -82,13 +87,13 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 		var axis = this.parser.getAxis(rotation_tag);
 		switch(axis){
 		case "x":
-			this.rotationX = angle * Math.PI / 180.0 ;
+			this.rotationX = angle;
 			break;
 		case "y":
-			this.rotationY = angle * Math.PI / 180.0 ;
+			this.rotationY = angle;
 			break;
 		case "z":
-			this.rotationZ = angle * Math.PI / 180.0 ;
+			this.rotationZ = angle;
 			break;
 		default:
 			console.log("INITIALS rotation on axis " + axis + "is incorrect");
@@ -201,24 +206,57 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	var elems =  rootElement.getElementsByTagName('LEAVES');
 	if (elems == null) {
-		return  "MATERIALS element is missing.";
+		return  "LEAVES element is missing.";
 	}
 
 	if (elems.length != 1) {
-		return "either zero or more than one 'MATERIALS' element found.";
+		return "either zero or more than one 'LEAVES' element found.";
 	}
 
 	this.rectangle = this.parser.getPrimitiveArgs(elems[0].children[0]);
+	if(this.rectangle.length != 5){
+		return "Please check rectangle args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+	}
+
 	this.cylinder = this.parser.getPrimitiveArgs(elems[0].children[1]);
+	if(this.cylinder.length != 6){
+		return "Please check cylinder args LEAVE to see if matches the prototype args=\"ff ff ff ii ii\"";
+	}
+
 	this.sphere = this.parser.getPrimitiveArgs(elems[0].children[2]);
+	if(this.sphere.length != 4){
+		return "Please check sphere args LEAVE to see if matches the prototype args=\"ff ii ii\"";
+	}
+
 	this.triangle = this.parser.getPrimitiveArgs(elems[0].children[3]);
+	if(this.triangle.length != 10){
+		return "Please check triangle args LEAVE to see if matches the prototype args=\"ff ff ff  ff ff ff  ff ff ff\"";
+	}
 }
+MySceneGraph.prototype.parseNodes = function(rootElement) {
+	var elems =  rootElement.getElementsByTagName('NODES');
+	if (elems == null) {
+		return  "NODES element is missing.";
+	}
+
+	if (elems.length != 1) {
+		return "either zero or more than one 'NODES' element found.";
+	}
+
+	this.root = this.parser.getString(elems[0].children[1], "id");
+	this.nodes = [];
+	for(i = 1; i < elems[0].children.length; i++){
+		var tempNode = this.parser.getNode(elems[0].children[i]);
+		this.nodes[tempNode[0]] = tempNode[1];
+	}
+}
+
 /*
  * Callback to be executed on any read error
  */
  
 MySceneGraph.prototype.onXMLError=function (message) {
-	console.error("XML Loading Error: "+message);	
+	console.error("LSX Loading Error: "+message);	
 	this.loadedOk=false;
 };
 

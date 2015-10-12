@@ -36,15 +36,15 @@ MySphere.prototype.initBuffers = function() {
         var x = cosPhi * sinTheta;
         var y = cosTheta;
         var z = sinPhi * sinTheta;
-        var u = 1 - (longNumber / this.slices);
-        var v = 1 - (latNumber / this.stacks);
+        var s = 1 - (longNumber / this.slices);
+        var t = 1 - (latNumber / this.stacks);
         var index = latNumber * this.slices + longNumber;
 
         this.normals.push(x);
         this.normals.push(y);
         this.normals.push(z);
-        this.texCoords.push(u);
-        this.texCoords.push(v);
+        this.texCoords.push(s);
+        this.texCoords.push(t);
         this.vertices.push(this.radius * x);
         this.vertices.push(this.radius * y);
         this.vertices.push(this.radius * z);

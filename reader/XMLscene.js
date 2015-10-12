@@ -23,10 +23,6 @@ XMLscene.prototype.init = function (application) {
     this.enableTextures(true);
 
 	this.axis = new CGFaxis(this);
-
-	this.sphere = new MySphere(this, 0.5, 50.0, 50.0);
-	this.rectangle = new MyRectangle(this, -0.5, 0.5, 0.5,-0.5);
-	this.cylinder = new MyCylinder(this, 5, 0.5, 0.1, 50.0, 50.0);
 };
 
 XMLscene.prototype.initLights = function () {
@@ -42,9 +38,8 @@ XMLscene.prototype.initCameras = function () {
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
-    this.setAmbient(0.2, 0.2, 0.2, 1.0);
-    this.setDiffuse(0.2, 0.2, 0.2, 1.0);
-    this.setSpecular(0.2, 0.2, 0.2, 1.0);
+    this.setAmbient(1.0, 1.0, 1.0, 1.0);
+    this.setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.setShininess(10.0);	
 };
 
@@ -79,14 +74,16 @@ XMLscene.prototype.onGraphLoaded = function ()
 	//TEXTURE BLOCK
 
 	this.textures = [];
+	this.textAmp = [];
 	for(var i = 0; i < this.graph.textures.length; i++){
 		this.textures[this.graph.textures[i][0]] = new CGFtexture(this, this.graph.textures[i][1]);
+		this.textAmp[this.graph.textures[i][0]] = this.graph.textures[i][2];
 	}
 
 	//MATERIALS BLOCK
 
 	this.materials = [];
-	for(var i = 0; i < this.graph.textures.length; i++){
+	for(var i = 0; i < this.graph.materials.length; i++){
 		var material = new CGFappearance(this);
 		material.setShininess(this.graph.materials[i][1]);
 		material.setSpecular(this.graph.materials[i][2][0],this.graph.materials[i][2][1], 
@@ -99,6 +96,15 @@ XMLscene.prototype.onGraphLoaded = function ()
 		this.graph.materials[i][5][2], this.graph.materials[i][5][3]);
 		this.materials[this.graph.materials[i][0]] = material;
 	}
+
+	//LEAVES BLOCK
+	this.leaves = [];
+	this.leaves[this.graph.rectangle[0]] = new MyRectangle(this, this.graph.rectangle[1], this.graph.rectangle[2], this.graph.rectangle[3], this.graph.rectangle[4]);
+	this.leaves[this.graph.cylinder[0]] = new MyCylinder(this, this.graph.cylinder[1], this.graph.cylinder[2], this.graph.cylinder[3], this.graph.cylinder[4], this.graph.cylinder[5]);
+	this.leaves[this.graph.sphere[0]] = new MySphere(this, this.graph.sphere[1], this.graph.sphere[2], this.graph.sphere[3]);
+	this.leaves[this.graph.triangle[0]] = new MyTriangle(this, this.graph.triangle[1], this.graph.triangle[2], this.graph.triangle[3],
+																this.graph.triangle[4], this.graph.triangle[5], this.graph.triangle[6],
+																this.graph.triangle[7], this.graph.triangle[8], this.graph.triangle[9]);
 };
 
 XMLscene.prototype.display = function () {
@@ -132,13 +138,33 @@ XMLscene.prototype.display = function () {
 		for(var i = 0; i < this.graph.lights.length; i++){
 			this.lights[i].update();
 		}
-		this.rotate(-Math.PI /2.0, 1,0,0);
-		this.translate(3,-3, 0);
-		this.cylinder.display();
-		this.textures["pitch"].bind();
-		this.rectangle.display();
-		this.textures["pitch"].unbind();
-		
+		this.pushMatrix();
+		this.translate(0.125,3,0);
+		this.materials['laranja'].apply();
+		this.leaves['triangle'].display();
+		this.popMatrix();
+		this.pushMatrix();
+		this.translate(0.125,3,0);
+		this.rotate(-Math.PI/2.0, 0,0,1);
+		this.rotate(Math.PI, 0,1,0);
+		this.materials['laranja'].apply();
+		this.leaves['triangle'].display();
+		this.popMatrix();
+		this.pushMatrix();
+		this.rotate(-Math.PI/2.0, 1,0,0);
+		this.scale(0.25,0.25,4);
+		this.materials['amarelo'].apply();
+		this.leaves['cylinder'].display();
+		this.popMatrix();
+		this.pushMatrix();
+		this.setDefaultAppearance();
+		this.scale(50,1.0,75);
+		this.translate(0.5,0,0.5);
+		this.textures['pitch'].bind();
+		this.leaves['rectangle'].display();
+		this.popMatrix();
+
+
 	};	
 
     this.shader.unbind();
