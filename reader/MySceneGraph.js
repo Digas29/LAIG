@@ -1,11 +1,11 @@
 function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
-	
+
 	// Establish bidirectional references between scene and graph
 	this.scene = scene;
 	scene.graph=this;
-		
-	// File reading 
+
+	// File reading
 	this.reader = new CGFXMLreader();
 	this.parser = new LSXParser();
 
@@ -14,18 +14,18 @@ function MySceneGraph(filename, scene) {
 	 * After the file is read, the reader calls onXMLReady on this object.
 	 * If any error occurs, the reader calls onXMLError on this object, with an error message
 	 */
-	 
-	this.reader.open('scenes/'+filename, this);  
+
+	this.reader.open('scenes/'+filename, this);
 }
 
 /*
  * Callback to be executed after successful reading
  */
-MySceneGraph.prototype.onXMLReady=function() 
+MySceneGraph.prototype.onXMLReady=function()
 {
 	console.log("LSX Loading finished.");
 	var rootElement = this.reader.xmlDoc.documentElement;
-	
+
 	// Here should go the calls for different functions to parse the various blocks
 	var error = this.parseInitials(rootElement);
 	if (error != null) {
@@ -63,14 +63,14 @@ MySceneGraph.prototype.onXMLReady=function()
 		return;
 	}
 	this.loadedOk=true;
-	
+
 	// As the graph loaded ok, signal the scene so that any additional initialization depending on the graph can take place
 	this.scene.onGraphLoaded();
 };
 
 
 MySceneGraph.prototype.parseInitials= function(rootElement) {
-	
+
 	var elems =  rootElement.getElementsByTagName('INITIALS');
 	if (elems == null) {
 		return  "INITIALS element is missing.";
@@ -79,34 +79,44 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	if (elems.length != 1) {
 		return "either zero or more than one 'INITIALS' element found.";
 	}
+	var matrix = mat4.create();
+	mat4.identity(matrix);
+
 	var frustum_tag = elems[0].children[0];
+	this.near = this.parser.getValue(frustum_tag, "near");
+	this.far = this.parser.getValue(frustum_tag, "far");
+
 	var translation_tag = elems[0].children[1];
+	var translation = this.parser.getCoords(translation_tag);
+	mat4.translate(matrix, matrix, [translation[0], translation[1], translation[2]]);
+
 	for(var i = 2; i < 5; i++){
 		var rotation_tag = elems[0].children[i];
 		var angle = this.parser.getAngle(rotation_tag);
 		var axis = this.parser.getAxis(rotation_tag);
 		switch(axis){
 		case "x":
-			this.rotationX = angle;
+			mat4.rotate(matrix, matrix, angle, [1, 0, 0]);
 			break;
 		case "y":
-			this.rotationY = angle;
+			mat4.rotate(matrix, matrix, angle, [0, 1, 0]);
 			break;
 		case "z":
-			this.rotationZ = angle;
+			mat4.rotate(matrix, matrix, angle, [0, 0, 1]);
 			break;
 		default:
 			console.log("INITIALS rotation on axis " + axis + "is incorrect");
 		}
+
 	}
 	var scale_tag =  elems[0].children[5];
 	var reference_tag = elems[0].children[6];
 
-	this.near = this.parser.getValue(frustum_tag, "near");
-	this.far = this.parser.getValue(frustum_tag, "far");
-	this.translation = this.parser.getCoords(translation_tag);
-	this.scale = this.parser.getScaleCoords(scale_tag);
 	this.axisLength = this.parser.getValue(reference_tag, "length");
+
+	var scale = this.parser.getScaleCoords(scale_tag);
+	mat4.scale(matrix, matrix, [scale[0], scale[1], scale[2]]);
+	this.initialsTrans = matrix;
 };
 
 MySceneGraph.prototype.parseIllumination= function(rootElement) {
@@ -135,21 +145,21 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	this.lights = [];
 	var nLights = elems[0].children.length;
 	for(var i = 0; i < nLights; i++){
-		var lightsValues = [];
+		var lightValues = new Light();
 		var light = elems[0].children[i];
-		var id = this.parser.getString(light, "id");
 		var enable_tag = light.children[0];
 		var position_tag = light.children[1];
 		var ambient_tag = light.children[2];
 		var diffuse_tag = light.children[3];
 		var specular_tag = light.children[4];
-		lightsValues[0] = this.parser.getBoolean(enable_tag);
-		lightsValues[1] = this.parser.getLightPosition(position_tag);
-		lightsValues[2] = this.parser.getRGB(ambient_tag);
-		lightsValues[3] = this.parser.getRGB(diffuse_tag);
-		lightsValues[4] = this.parser.getRGB(specular_tag);
-		this.lights[i] = lightsValues;
-		console.log("Light with id="+id+ " was processed successfuly.")
+		lightValues.id = this.parser.getString(light, "id");
+		lightValues.enable = this.parser.getBoolean(enable_tag);
+		lightValues.position = this.parser.getLightPosition(position_tag);
+		lightValues.ambient = this.parser.getRGB(ambient_tag);
+	 	lightValues.diffuse = this.parser.getRGB(diffuse_tag);
+		lightValues.specular = this.parser.getRGB(specular_tag);
+		this.lights[i] = lightValues;
+		console.log("Light with id=" + lightValues.id + " was processed successfuly.")
 	}
 }
 MySceneGraph.prototype.parseTextures = function(rootElement) {
@@ -174,7 +184,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 		textureInfo[3] = this.parser.getValue(amp_tag, "t");
 		this.textures[i] = textureInfo;
 	}
-}	
+}
 MySceneGraph.prototype.parseMaterials = function(rootElement) {
 	var elems =  rootElement.getElementsByTagName('MATERIALS');
 	if (elems == null) {
@@ -187,19 +197,19 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 	this.materials = [];
 	var nMaterials = elems[0].children.length;
 	for(var i = 0; i < nMaterials; i++){
-		var materialInfo = [];
+		var materialInfo = new Material();
 		var material_tag = elems[0].children[i];
-		materialInfo[0] = this.parser.getString(material_tag, "id");
-		var shiness_tag = material_tag.children[0];
+		var shininess_tag = material_tag.children[0];
 		var specular_tag = material_tag.children[1]
 		var diffuse_tag = material_tag.children[2];
 		var ambient_tag = material_tag.children[3];
 		var emission_tag = material_tag.children[4];
-		materialInfo[1] = this.parser.getValue(shiness_tag, "value");
-		materialInfo[2] = this.parser.getRGB(specular_tag);
-		materialInfo[3] = this.parser.getRGB(diffuse_tag);
-		materialInfo[4] = this.parser.getRGB(ambient_tag);
-		materialInfo[5] = this.parser.getRGB(emission_tag);
+		materialInfo.id = this.parser.getString(material_tag, "id");
+		materialInfo.shininess = this.parser.getValue(shininess_tag, "value");
+		materialInfo.specular = this.parser.getRGB(specular_tag);
+		materialInfo.diffuse = this.parser.getRGB(diffuse_tag);
+		materialInfo.ambient = this.parser.getRGB(ambient_tag);
+		materialInfo.emission = this.parser.getRGB(emission_tag);
 		this.materials[i] = materialInfo;
 	}
 }
@@ -254,10 +264,8 @@ MySceneGraph.prototype.parseNodes = function(rootElement) {
 /*
  * Callback to be executed on any read error
  */
- 
+
 MySceneGraph.prototype.onXMLError=function (message) {
-	console.error("LSX Loading Error: "+message);	
+	console.error("LSX Loading Error: "+message);
 	this.loadedOk=false;
 };
-
-

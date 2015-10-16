@@ -1,6 +1,7 @@
 
-function XMLscene() {
+function XMLscene(interface) {
     CGFscene.call(this);
+    this.interface = interface;
 }
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
@@ -9,27 +10,24 @@ XMLscene.prototype.constructor = XMLscene;
 XMLscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
-    this.initCameras();
-
     this.initLights();
-
+    this.initCameras();
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
-	this.gl.enable(this.gl.CULL_FACE);
+    this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
     this.enableTextures(true);
-
-	this.axis = new CGFaxis(this);
-	this.print = true;
+    this.axis = new CGFaxis(this);
+    this.print = true;
 };
 
 XMLscene.prototype.initLights = function () {
 
     this.shader.bind();
- 
+
     this.shader.unbind();
 };
 
@@ -45,33 +43,31 @@ XMLscene.prototype.setDefaultAppearance = function () {
     this.setShininess(10.0);
 };
 
-// Handler called when the graph is finally loaded. 
+// Handler called when the graph is finally loaded.
 // As loading is asynchronous, this may be called already after the application has started the run loop
-XMLscene.prototype.onGraphLoaded = function () 
-{
+XMLscene.prototype.onGraphLoaded = function (){
 	//INITIALS BLOCK
-	this.camera.near = this.graph.near;
-	this.camera.far = this.graph.far;
-	this.camera.setPosition(vec3.fromValues(this.graph.translation[0], this.graph.translation[1], this.graph.translation[2]));
-	this.camera.orbit(vec3.fromValues(1,0,0),this.graph.rotationX);
-	this.camera.orbit(vec3.fromValues(0,1,0),this.graph.rotationY);
-	this.camera.orbit(vec3.fromValues(0,0,1),this.graph.rotationZ);
+
+	this.initialsTrans = this.graph.initialsTrans;
 	this.axis = new CGFaxis(this, this.graph.axisLength);
+  this.camera.near = this.graph.near;
+  this.camera.far = this.graph.far;
 
 	//ILLUMINATON BLOCK
-	this.gl.clearColor(this.graph.background[0],this.graph.background[1],this.graph.background[2],this.graph.background[3]);
-	this.setGlobalAmbientLight(this.graph.ambient[0],this.graph.ambient[1],this.graph.ambient[2],this.graph.ambient[3]);
-	
-	
+	this.gl.clearColor(this.graph.background.r,this.graph.background.g,this.graph.background.b,this.graph.background.a);
+	this.setGlobalAmbientLight(this.graph.ambient.r,this.graph.ambient.g,this.graph.ambient.b,this.graph.ambient.a);
+
+
 	//LIGHTS BLOCK
 	for(var i = 0; i < this.graph.lights.length; i++){
-		this.lights[i].setPosition(this.graph.lights[i][1][0], this.graph.lights[i][1][1], this.graph.lights[i][1][2],this.graph.lights[i][1][3]);
-		this.lights[i].setAmbient(this.graph.lights[i][2][0], this.graph.lights[i][2][1], this.graph.lights[i][2][2],this.graph.lights[i][2][3]);
-		this.lights[i].setDiffuse(this.graph.lights[i][3][0], this.graph.lights[i][3][1], this.graph.lights[i][3][2],this.graph.lights[i][3][3]);
-		this.lights[i].setSpecular(this.graph.lights[i][4][0], this.graph.lights[i][4][1], this.graph.lights[i][4][2],this.graph.lights[i][4][3]);
+		this.lights[i].setPosition(this.graph.lights[i].position[0], this.graph.lights[i].position[1], this.graph.lights[i].position[2],this.graph.lights[i].position[3]);
+		this.lights[i].setAmbient(this.graph.lights[i].ambient.r, this.graph.lights[i].ambient.g, this.graph.lights[i].ambient.b,this.graph.lights[i].ambient.a);
+		this.lights[i].setDiffuse(this.graph.lights[i].diffuse.r, this.graph.lights[i].diffuse.g, this.graph.lights[i].diffuse.b,this.graph.lights[i].diffuse.a);
+		this.lights[i].setSpecular(this.graph.lights[i].specular.r, this.graph.lights[i].specular.g, this.graph.lights[i].specular.b,this.graph.lights[i].specular.a);
 		this.lights[i].setVisible(true);
-		if(this.graph.lights[i][0] == true)
+		if(this.graph.lights[i].enable == true)
 			this.lights[i].enable();
+      this.interface.addLightToFolder(this.graph.lights[i]);
 	}
 
 	//TEXTURE BLOCK
@@ -88,16 +84,16 @@ XMLscene.prototype.onGraphLoaded = function ()
 	this.materials = [];
 	for(var i = 0; i < this.graph.materials.length; i++){
 		var material = new CGFappearance(this);
-		material.setShininess(this.graph.materials[i][1]);
-		material.setSpecular(this.graph.materials[i][2][0],this.graph.materials[i][2][1], 
-		this.graph.materials[i][2][2], this.graph.materials[i][2][3]);
-		material.setDiffuse(this.graph.materials[i][3][0],this.graph.materials[i][3][1], 
-		this.graph.materials[i][3][2], this.graph.materials[i][3][3]);
-		material.setAmbient(this.graph.materials[i][4][0],this.graph.materials[i][4][1], 
-		this.graph.materials[i][4][2], this.graph.materials[i][4][3]);
-		material.setEmission(this.graph.materials[i][5][0],this.graph.materials[i][5][1], 
-		this.graph.materials[i][5][2], this.graph.materials[i][5][3]);
-		this.materials[this.graph.materials[i][0]] = material;
+		material.setShininess(this.graph.materials[i].shininess);
+		material.setSpecular(this.graph.materials[i].specular.r,this.graph.materials[i].specular.g,
+		this.graph.materials[i].specular.b, this.graph.materials[i].specular.a);
+		material.setDiffuse(this.graph.materials[i].diffuse.r,this.graph.materials[i].diffuse.g,
+		this.graph.materials[i].diffuse.b, this.graph.materials[i].diffuse.a);
+		material.setAmbient(this.graph.materials[i].ambient.r,this.graph.materials[i].ambient.g,
+		this.graph.materials[i].ambient.b, this.graph.materials[i].ambient.a);
+		material.setEmission(this.graph.materials[i].emission.r,this.graph.materials[i].emission.g,
+		this.graph.materials[i].emission.b, this.graph.materials[i].emission.a);
+		this.materials[this.graph.materials[i].id] = material;
 	}
 
 	//LEAVES BLOCK
@@ -113,7 +109,7 @@ XMLscene.prototype.onGraphLoaded = function ()
 XMLscene.prototype.display = function () {
 	// ---- BEGIN Background, camera and axis setup
     this.shader.bind();
-	
+
 	// Clear image and depth buffer everytime we update the scene
     this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -126,10 +122,10 @@ XMLscene.prototype.display = function () {
 	this.applyViewMatrix();
 
 	// Draw axis
-	this.axis.display();
+
 
 	this.setDefaultAppearance();
-	
+
 	// ---- END Background, camera and axis setup
 
 	// it is important that things depending on the proper loading of the graph
@@ -138,13 +134,16 @@ XMLscene.prototype.display = function () {
 
 	if (this.graph.loadedOk)
 	{
+    this.multMatrix(this.initialsTrans);
+    this.axis.display();
 		for(var i = 0; i < this.graph.lights.length; i++){
 			this.lights[i].update();
 		}
 
 		this.drawNodes(this.graph.root, this.graph.nodes[this.graph.root][2],this.graph.nodes[this.graph.root][0], this.graph.nodes[this.graph.root][1]);
 		this.print = false;
-	};	
+    this.updateLights();
+	};
 
     this.shader.unbind();
 };
@@ -166,7 +165,7 @@ XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
 
 	var newMatrix = mat4.create();
 	mat4.multiply(newMatrix, matrix, geoTrans);
-	
+
 
 	for(var i = 0; i < descendants.length; i++){
 		var descendant = descendants[i];
@@ -179,24 +178,34 @@ XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
 		}
 	}
 };
+
 XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, texture){
-	if(material != "null"){
-		this.materials[material].apply();
-	}
-	var texture;
-	if(texture != "null"){
-		texture = this.textures[texture];
-		texture.bind(); 
-	}
-	
-	this.pushMatrix();
+
+    this.pushMatrix();
         this.multMatrix(matrix);
+        if(material != "null"){
+          this.materials[material].apply();
+        }
+        var texture;
+        if(texture != "null"){
+          texture = this.textures[texture];
+          texture.bind();
+        }
         this.leaves[primitive].display();
     this.popMatrix();
     this.setDefaultAppearance();
     if(texture != "null"){
-		texture.unbind(); 
+		texture.unbind();
 	}
 }
 
-
+XMLscene.prototype.updateLights = function(){
+  for (var i = 0; i < this.lights.length; i++) {
+    if(this.graph.lights[i].enable){
+      this.lights[i].enable();
+    }
+    else{
+      this.lights[i].disable();
+    }
+  }
+}

@@ -17,12 +17,12 @@ LSXParser.prototype.getBoolean = function(tag){
 	 }
 }
 LSXParser.prototype.getRGB = function(tag){
-	var RGB = [];
-	RGB[0] = this.getValue(tag, "r");
-	RGB[1] = this.getValue(tag, "g");
-	RGB[2] = this.getValue(tag, "b");
-	RGB[3] = this.getValue(tag, "a");
-	return RGB;
+	var rgb = new RGB();
+	rgb.r = this.getValue(tag, "r");
+	rgb.g = this.getValue(tag, "g");
+	rgb.b = this.getValue(tag, "b");
+	rgb.a = this.getValue(tag, "a");
+	return rgb;
 }
 
 LSXParser.prototype.getCoords = function(tag){
@@ -74,7 +74,7 @@ LSXParser.prototype.getNode = function(tag){
 		case 'TRANSLATION':
 			var translation = this.getCoords(tag.children[i]);
 			mat4.translate(matrix, matrix, [translation[0],translation[1], translation[2]]);
-			break; 
+			break;
 		case 'SCALE':
 			var scale = this.getScaleCoords(tag.children[i]);
 			mat4.scale(matrix, matrix, [scale[0],scale[1], scale[2]]);
@@ -103,7 +103,7 @@ LSXParser.prototype.getNode = function(tag){
 		i++;
 	}
 	nodeInfo[2] = matrix;
-	
+
 	var descendantTag = tag.children[i];
 	var descendants = [];
 	for(var j = 0; j < descendantTag.children.length; j++){
