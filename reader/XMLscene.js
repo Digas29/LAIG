@@ -121,6 +121,7 @@ XMLscene.prototype.onGraphLoaded = function (){
       break;
     }
   }
+  console.log(this.leaves);
 };
 
 XMLscene.prototype.display = function () {
@@ -140,7 +141,6 @@ XMLscene.prototype.display = function () {
 
 	// Draw axis
 
-
 	this.setDefaultAppearance();
 
 	// ---- END Background, camera and axis setup
@@ -156,7 +156,6 @@ XMLscene.prototype.display = function () {
 		for(var i = 0; i < this.graph.lights.length; i++){
 			this.lights[i].update();
 		}
-
 		this.drawNodes(this.graph.root, this.graph.nodes[this.graph.root][2],this.graph.nodes[this.graph.root][0], this.graph.nodes[this.graph.root][1]);
 		this.print = false;
     this.updateLights();
@@ -177,6 +176,9 @@ XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
 	if(textureNode == "null"){
 		textureNode = texture;
 	}
+  else if(textureNode == "clear"){
+    textureNode = "null";
+  }
 	var geoTrans = nodeInfo[2];
 	var descendants = nodeInfo[3];
 
@@ -196,7 +198,7 @@ XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
 	}
 };
 
-XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, texture){
+XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, textureName){
 
     this.pushMatrix();
         this.multMatrix(matrix);
@@ -204,20 +206,20 @@ XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, texture
           this.materials[material].apply();
         }
         var texture;
-        if(texture != "null"){
-          texture = this.textures[texture];
-          texture.bind();
+        if(textureName != "null"){
+          this.textures[textureName].bind();
         }
         this.leaves[primitive].display();
     this.popMatrix();
     this.setDefaultAppearance();
-    if(texture != "null"){
-		texture.unbind();
-	}
+    if(textureName != "null"){
+      this.textures[textureName].unbind;
+    }
+
 }
 
 XMLscene.prototype.updateLights = function(){
-  for (var i = 0; i < this.lights.length; i++) {
+  for (var i = 0; i < this.graph.lights.length; i++) {
     if(this.graph.lights[i].enable){
       this.lights[i].enable();
     }

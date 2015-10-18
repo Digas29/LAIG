@@ -65,17 +65,20 @@ MyTriangle.prototype.initBuffers = function () {
             this.normalX, this.normalY, this.normalZ,
             this.normalX, this.normalY, this.normalZ
 	];
-
-	this.texCoords = [];
+	this.texCoords= [
+			0, 0,
+			1, 0,
+			1, 1
+		];
 	this.initGLBuffers();
 };
 
 MyTriangle.prototype.updateTexCoords = function(ampS, ampT){
 
     this.texCoords= [
-    		(this.c - this.a * Math.cos(this.beta)) / ampS, 0.0,
-    		0.0, 1 / ampT,
-    		this.c / ampS, 1.0 / ampT];
+    		(this.c - this.a * Math.cos(this.beta)) / ampS, this.a * Math.sin(this.beta)/ampT,
+    		0.0, 0.0,
+    		this.c / ampS, 0.0];
 
     this.updateTexCoordsGLBuffers();
 }
