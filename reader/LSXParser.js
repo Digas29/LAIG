@@ -50,14 +50,18 @@ LSXParser.prototype.getLightPosition = function(tag){
 	coords[3] = this.getValue(tag,"w");
 	return coords;
 }
-LSXParser.prototype.getPrimitiveArgs = function(tag){
-	var stringArray = this.getString(tag, "args").match(/[-+]?[0-9]*\.?[0-9]+/g);
-	var valueArray = [];
-	valueArray[0] = this.getString(tag, "id");
-	for(var i = 0; i < stringArray.length;i++){
-		valueArray[i+1] = parseFloat(stringArray[i]);
+LSXParser.prototype.getPrimitive = function(tag){
+
+	var primitive = new Primitive();
+
+	primitive.id = this.getString(tag, "id");
+	primitive.type = this.getString(tag, "type");
+	var argsArray = this.getString(tag, "args").match(/[-+]?[0-9]*\.?[0-9]+/g);
+
+	for(var i = 0; i < argsArray.length;i++){
+		primitive.args[i] = parseFloat(argsArray[i]);
 	}
-	return valueArray;
+	return primitive;
 }
 
 LSXParser.prototype.getNode = function(tag){

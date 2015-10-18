@@ -459,6 +459,7 @@
         <TEXTURE id="null" />
 
         <SCALE sx="3.0" sy="1.0" sz="10.0" />
+        <ROTATION axis="x" angle="-90.0" />
         <DESCENDANTS>
             <DESCENDANT id="rectangle" />
         </DESCENDANTS>
@@ -468,8 +469,11 @@
 
         <MATERIAL id="null" />
         <TEXTURE id="null" />
-        <ROTATION axis="z" angle="-90.0" />
-        <SCALE sx="3.0" sy="1.0" sz="10.0" />
+
+
+        <SCALE sx="1.0" sy="3.0" sz="10.0" />
+        <ROTATION axis="y" angle="90.0" />
+
         <DESCENDANTS>
             <DESCENDANT id="rectangle" />
         </DESCENDANTS>
@@ -514,7 +518,7 @@
 
         <SCALE sx="50.0" sy="1.0" sz="95.0" />
         <TRANSLATION x="0.5" y="0.0" z="0.5" />
-
+        <ROTATION axis="x" angle="-90.0" />
         <DESCENDANTS>
             <DESCENDANT id="rectangle" />
         </DESCENDANTS>

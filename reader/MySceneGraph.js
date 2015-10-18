@@ -10,17 +10,17 @@ function MySceneGraph(filename, scene) {
 	this.parser = new LSXParser();
 
 	/*
-	 * Read the contents of the xml file, and refer to this class for loading and error handlers.
-	 * After the file is read, the reader calls onXMLReady on this object.
-	 * If any error occurs, the reader calls onXMLError on this object, with an error message
-	 */
+	* Read the contents of the xml file, and refer to this class for loading and error handlers.
+	* After the file is read, the reader calls onXMLReady on this object.
+	* If any error occurs, the reader calls onXMLError on this object, with an error message
+	*/
 
 	this.reader.open('scenes/'+filename, this);
 }
 
 /*
- * Callback to be executed after successful reading
- */
+* Callback to be executed after successful reading
+*/
 MySceneGraph.prototype.onXMLReady=function()
 {
 	console.log("LSX Loading finished.");
@@ -95,16 +95,16 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 		var angle = this.parser.getAngle(rotation_tag);
 		var axis = this.parser.getAxis(rotation_tag);
 		switch(axis){
-		case "x":
+			case "x":
 			mat4.rotate(matrix, matrix, angle, [1, 0, 0]);
 			break;
-		case "y":
+			case "y":
 			mat4.rotate(matrix, matrix, angle, [0, 1, 0]);
 			break;
-		case "z":
+			case "z":
 			mat4.rotate(matrix, matrix, angle, [0, 0, 1]);
 			break;
-		default:
+			default:
 			console.log("INITIALS rotation on axis " + axis + "is incorrect");
 		}
 
@@ -156,7 +156,7 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		lightValues.enable = this.parser.getBoolean(enable_tag);
 		lightValues.position = this.parser.getLightPosition(position_tag);
 		lightValues.ambient = this.parser.getRGB(ambient_tag);
-	 	lightValues.diffuse = this.parser.getRGB(diffuse_tag);
+		lightValues.diffuse = this.parser.getRGB(diffuse_tag);
 		lightValues.specular = this.parser.getRGB(specular_tag);
 		this.lights[i] = lightValues;
 		console.log("Light with id=" + lightValues.id + " was processed successfuly.")
@@ -222,25 +222,33 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	if (elems.length != 1) {
 		return "either zero or more than one 'LEAVES' element found.";
 	}
-
-	this.rectangle = this.parser.getPrimitiveArgs(elems[0].children[0]);
-	if(this.rectangle.length != 5){
-		return "Please check rectangle args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
-	}
-
-	this.cylinder = this.parser.getPrimitiveArgs(elems[0].children[1]);
-	if(this.cylinder.length != 6){
-		return "Please check cylinder args LEAVE to see if matches the prototype args=\"ff ff ff ii ii\"";
-	}
-
-	this.sphere = this.parser.getPrimitiveArgs(elems[0].children[2]);
-	if(this.sphere.length != 4){
-		return "Please check sphere args LEAVE to see if matches the prototype args=\"ff ii ii\"";
-	}
-
-	this.triangle = this.parser.getPrimitiveArgs(elems[0].children[3]);
-	if(this.triangle.length != 10){
-		return "Please check triangle args LEAVE to see if matches the prototype args=\"ff ff ff  ff ff ff  ff ff ff\"";
+	this.primitives = [];
+	for (var i = 0; i < elems[0].children.length; i++) {
+		this.primitives[i] = this.parser.getPrimitive(elems[0].children[i]);
+		switch (this.primitives[i].type) {
+			case "rectangle":
+				if(this.primitives[i].args.length != 4){
+					return "Please check rectangle args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+				}
+				break;
+			case "cylinder":
+				if(this.primitives[i].args.length != 5){
+					return "Please check cylinder args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+				}
+				break;
+			case "sphere":
+				if(this.primitives[i].args.length != 3){
+					return "Please check sphere args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+				}
+				break;
+			case "triangle":
+				if(this.primitives[i].args.length != 9){
+					return "Please check triangle args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+				}
+				break;
+			default:
+				return this.primitives[i].type + " is not a primitive type";
+		}
 	}
 }
 MySceneGraph.prototype.parseNodes = function(rootElement) {
@@ -262,8 +270,8 @@ MySceneGraph.prototype.parseNodes = function(rootElement) {
 }
 
 /*
- * Callback to be executed on any read error
- */
+* Callback to be executed on any read error
+*/
 
 MySceneGraph.prototype.onXMLError=function (message) {
 	console.error("LSX Loading Error: "+message);

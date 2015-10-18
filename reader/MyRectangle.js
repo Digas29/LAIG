@@ -16,23 +16,23 @@ MyRectangle.prototype.constructor=MyRectangle;
 
 MyRectangle.prototype.initBuffers = function () {
 	this.vertices = [
-            this.x1, 0, this.y2,
-            this.x2, 0, this.y2, 
-            this.x1, 0, this.y1,
-            this.x2, 0, this.y1,
+            this.x1, this.y2, 0,
+            this.x2, this.y2, 0,
+            this.x1, this.y1, 0,
+            this.x2, this.y1, 0
 			];
 
 	this.indices = [
-            2, 1, 0, 
-			1, 2, 3
+            0, 1, 2,
+						3, 2, 1
         ];
-		
+
 	this.primitiveType=this.scene.gl.TRIANGLES;
 	this.normals = [
-			0, 1, 0,
-			0, 1, 0,
-			0, 1, 0,
-			0, 1, 0
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1,
+			0, 0, 1
 	];
 
 	this.texCoords = [
@@ -54,6 +54,6 @@ MyRectangle.prototype.updateTexCoords = function(ampS, ampT){
     		sMax, 0,
     		0, tMax,
     		sMax, tMax];
- 
+
     this.updateTexCoordsGLBuffers();
 };

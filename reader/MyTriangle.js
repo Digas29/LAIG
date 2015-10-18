@@ -14,20 +14,20 @@ function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
 	this.z2 = z2;
 	this.z3 = z3;
 
-	this.a = Math.sqrt((x1 - x3) * (x1 - x3) + 
+	this.a = Math.sqrt((x1 - x3) * (x1 - x3) +
 			 		   (y1 - y3) * (y1 - y3) +
 			 		   (z1 - z3) * (z1 - z3));
 
-	this.b = Math.sqrt((x2 - x1) * (x2 - x1) + 
+	this.b = Math.sqrt((x2 - x1) * (x2 - x1) +
 			 		   (y2 - y1) * (y2 - y1) +
 			 		   (z2 - z1) * (z2 - z1));
 
-	this.c = Math.sqrt((x3 - x2) * (x3 - x2) + 
+	this.c = Math.sqrt((x3 - x2) * (x3 - x2) +
 			 		   (y3 - y2) * (y3 - y2) +
 			 		   (z3 - z2) * (z3 - z2));
 
 	this.cosBeta =  ( this.a*this.a - this.b*this.b + this.c * this.c) / (2 * this.a * this.c);
-	
+
 	this.beta = Math.acos(this.cosBeta);
 
 	this.xU = x2 - x1;
@@ -58,10 +58,10 @@ MyTriangle.prototype.initBuffers = function () {
 	this.indices = [
             0, 1, 2
         ];
-		
+
 	this.primitiveType=this.scene.gl.TRIANGLES;
 	this.normals = [
-			this.normalX, this.normalY, this.normalZ,
+						this.normalX, this.normalY, this.normalZ,
             this.normalX, this.normalY, this.normalZ,
             this.normalX, this.normalY, this.normalZ
 	];
@@ -76,6 +76,6 @@ MyTriangle.prototype.updateTexCoords = function(ampS, ampT){
     		(this.c - this.a * Math.cos(this.beta)) / ampS, 0.0,
     		0.0, 1 / ampT,
     		this.c / ampS, 1.0 / ampT];
- 
+
     this.updateTexCoordsGLBuffers();
 }

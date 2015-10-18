@@ -6,7 +6,9 @@ function Light(){
 	this.diffuse;
 	this.specular;
 }
+function Coords(){
 
+}
 function RGB(){
 	this.r;
 	this.g;
@@ -21,4 +23,9 @@ function Material(){
 	this.diffuse;
 	this.specular;
 	this.emission;
+}
+function Primitive(){
+	this.id;
+	this.type;
+	this.args = [];
 }

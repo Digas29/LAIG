@@ -98,12 +98,29 @@ XMLscene.prototype.onGraphLoaded = function (){
 
 	//LEAVES BLOCK
 	this.leaves = [];
-	this.leaves[this.graph.rectangle[0]] = new MyRectangle(this, this.graph.rectangle[1], this.graph.rectangle[2], this.graph.rectangle[3], this.graph.rectangle[4]);
-	this.leaves[this.graph.cylinder[0]] = new MyCylinder(this, this.graph.cylinder[1], this.graph.cylinder[2], this.graph.cylinder[3], this.graph.cylinder[4], this.graph.cylinder[5]);
-	this.leaves[this.graph.sphere[0]] = new MySphere(this, this.graph.sphere[1], this.graph.sphere[2], this.graph.sphere[3]);
-	this.leaves[this.graph.triangle[0]] = new MyTriangle(this, this.graph.triangle[1], this.graph.triangle[2], this.graph.triangle[3],
-																this.graph.triangle[4], this.graph.triangle[5], this.graph.triangle[6],
-																this.graph.triangle[7], this.graph.triangle[8], this.graph.triangle[9]);
+  for (var i = 0; i < this.graph.primitives.length; i++) {
+    switch (this.graph.primitives[i].type) {
+      case "rectangle":
+        this.leaves[this.graph.primitives[i].id] = new MyRectangle(this, this.graph.primitives[i].args[0], this.graph.primitives[i].args[1],
+          this.graph.primitives[i].args[2], this.graph.primitives[i].args[3]);
+        break;
+      case "cylinder":
+      this.leaves[this.graph.primitives[i].id] = new MyCylinder(this, this.graph.primitives[i].args[0], this.graph.primitives[i].args[1],
+        this.graph.primitives[i].args[2], this.graph.primitives[i].args[3], this.graph.primitives[i].args[4]);
+        break;
+      case "sphere":
+      this.leaves[this.graph.primitives[i].id] = new MySphere(this, this.graph.primitives[i].args[0], this.graph.primitives[i].args[1],
+        this.graph.primitives[i].args[2]);
+        break;
+      case "triangle":
+      this.leaves[this.graph.primitives[i].id] = new MyTriangle(this, this.graph.primitives[i].args[0], this.graph.primitives[i].args[1],
+        this.graph.primitives[i].args[2], this.graph.primitives[i].args[3], this.graph.primitives[i].args[4], this.graph.primitives[i].args[5], this.graph.primitives[i].args[6],
+          this.graph.primitives[i].args[7], this.graph.primitives[i].args[8]);
+        break;
+      default:
+      break;
+    }
+  }
 };
 
 XMLscene.prototype.display = function () {
