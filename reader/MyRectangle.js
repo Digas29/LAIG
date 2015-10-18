@@ -47,6 +47,7 @@ MyRectangle.prototype.initBuffers = function () {
 MyRectangle.prototype.updateTexCoords = function(ampS, ampT){
 	var height = this.y1 - this.y2;
 	var width = this.x2 - this.x1;
+
 	var sMax = 1.0 * width / ampS;
 	var tMax = 1.0 * height / ampT;
     this.texCoords= [

@@ -228,26 +228,26 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		switch (this.primitives[i].type) {
 			case "rectangle":
 				if(this.primitives[i].args.length != 4){
-					return "Please check rectangle args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+					return "Please check rectangle (id=" + this.primitives[i].id + ") args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
 				}
 				break;
 			case "cylinder":
 				if(this.primitives[i].args.length != 5){
-					return "Please check cylinder args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+					return "Please check cylinder (id=" + this.primitives[i].id + ") args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
 				}
 				break;
 			case "sphere":
 				if(this.primitives[i].args.length != 3){
-					return "Please check sphere args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+					return "Please check sphere (id=" + this.primitives[i].id + ") args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
 				}
 				break;
 			case "triangle":
 				if(this.primitives[i].args.length != 9){
-					return "Please check triangle args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
+					return "Please check triangle (id=" + this.primitives[i].id + ") args LEAVE to see if matches the prototype args=\"ff ff ff ff\"";
 				}
 				break;
 			default:
-				return this.primitives[i].type + " is not a primitive type";
+				return this.primitives[i].type + " is not a primitive type (id=" + this.primitives[i].id + ")";
 		}
 	}
 }
@@ -274,6 +274,6 @@ MySceneGraph.prototype.parseNodes = function(rootElement) {
 */
 
 MySceneGraph.prototype.onXMLError=function (message) {
-	console.error("LSX Loading Error: "+message);
+	window.alert("LSX Loading Error: " + message);
 	this.loadedOk=false;
 };

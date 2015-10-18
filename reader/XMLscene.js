@@ -76,7 +76,7 @@ XMLscene.prototype.onGraphLoaded = function (){
 	this.textAmp = [];
 	for(var i = 0; i < this.graph.textures.length; i++){
 		this.textures[this.graph.textures[i][0]] = new CGFtexture(this, this.graph.textures[i][1]);
-		this.textAmp[this.graph.textures[i][0]] = this.graph.textures[i][2];
+		this.textAmp[this.graph.textures[i][0]] = [this.graph.textures[i][2], this.graph.textures[i][3]];
 	}
 
 	//MATERIALS BLOCK
@@ -98,7 +98,9 @@ XMLscene.prototype.onGraphLoaded = function (){
 
 	//LEAVES BLOCK
 	this.leaves = [];
+  this.leavesProperties = [];
   for (var i = 0; i < this.graph.primitives.length; i++) {
+    this.leavesProperties[this.graph.primitives[i].id] = this.graph.primitives[i];
     switch (this.graph.primitives[i].type) {
       case "rectangle":
         this.leaves[this.graph.primitives[i].id] = new MyRectangle(this, this.graph.primitives[i].args[0], this.graph.primitives[i].args[1],
@@ -159,7 +161,10 @@ XMLscene.prototype.display = function () {
 		this.drawNodes(this.graph.root, this.graph.nodes[this.graph.root][2],this.graph.nodes[this.graph.root][0], this.graph.nodes[this.graph.root][1]);
 		this.print = false;
     this.updateLights();
-	};
+	}
+  else{
+    this.axis.display();
+  }
 
     this.shader.unbind();
 };
@@ -208,6 +213,9 @@ XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, texture
         var texture;
         if(textureName != "null"){
           this.textures[textureName].bind();
+          if(this.leavesProperties[primitive].type == "rectangle" || this.leavesProperties[primitive].type == "triangle"){
+            this.leaves[primitive].updateTexCoords(this.textAmp[textureName][0], this.textAmp[textureName][1]);
+          }
         }
         this.leaves[primitive].display();
     this.popMatrix();
