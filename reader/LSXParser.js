@@ -2,26 +2,40 @@ function LSXParser(){
 }
 
 LSXParser.prototype.getValue = function(tag, nameItem){
-	return parseFloat(tag.attributes.getNamedItem(nameItem).value);
+	for(var i = 0 ;  i < tag.attributes.length; i++){
+		if(tag.attributes[i].name == nameItem){
+			return parseFloat(tag.attributes[i].value);
+		}
+	}
+	return undefined;
 }
 LSXParser.prototype.getString = function(tag, nameItem){
-	return tag.attributes.getNamedItem(nameItem).value;
+	for(var i = 0 ;  i < tag.attributes.length; i++){
+		if(tag.attributes[i].name == nameItem){
+			return tag.attributes[i].value;
+		}
+	}
+	return undefined;
 }
 LSXParser.prototype.getBoolean = function(tag){
 	 var value = this.getValue(tag,"value");
 	 if(value == 1.0){
 	 	return true;
 	 }
-	 else{
+	 else if (value == 1.0){
 	 	return false;
+	 }
+	 else{
+		 return undefined;
 	 }
 }
 LSXParser.prototype.getRGB = function(tag){
-	var rgb = new RGB();
-	rgb.r = this.getValue(tag, "r");
-	rgb.g = this.getValue(tag, "g");
-	rgb.b = this.getValue(tag, "b");
-	rgb.a = this.getValue(tag, "a");
+	var rgb = {
+		r : this.getValue(tag, "r"),
+		g : this.getValue(tag, "g"),
+		b : this.getValue(tag, "b"),
+		a : this.getValue(tag, "a")
+	};
 	return rgb;
 }
 
