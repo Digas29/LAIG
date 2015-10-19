@@ -60,7 +60,7 @@ XMLscene.prototype.onGraphLoaded = function (){
 
 	//LIGHTS BLOCK
 	for(var i = 0; i < this.graph.lights.length; i++){
-		this.lights[i].setPosition(this.graph.lights[i].position[0], this.graph.lights[i].position[1], this.graph.lights[i].position[2],this.graph.lights[i].position[3]);
+		this.lights[i].setPosition(this.graph.lights[i].position.x, this.graph.lights[i].position.y, this.graph.lights[i].position.z,this.graph.lights[i].position.w);
 		this.lights[i].setAmbient(this.graph.lights[i].ambient.r, this.graph.lights[i].ambient.g, this.graph.lights[i].ambient.b,this.graph.lights[i].ambient.a);
 		this.lights[i].setDiffuse(this.graph.lights[i].diffuse.r, this.graph.lights[i].diffuse.g, this.graph.lights[i].diffuse.b,this.graph.lights[i].diffuse.a);
 		this.lights[i].setSpecular(this.graph.lights[i].specular.r, this.graph.lights[i].specular.g, this.graph.lights[i].specular.b,this.graph.lights[i].specular.a);
@@ -73,10 +73,10 @@ XMLscene.prototype.onGraphLoaded = function (){
 	//TEXTURE BLOCK
 
 	this.textures = [];
-	this.textAmp = [];
+	this.textInfo = [];
 	for(var i = 0; i < this.graph.textures.length; i++){
-		this.textures[this.graph.textures[i][0]] = new CGFtexture(this, this.graph.textures[i][1]);
-		this.textAmp[this.graph.textures[i][0]] = [this.graph.textures[i][2], this.graph.textures[i][3]];
+		this.textures[this.graph.textures[i].id] = new CGFtexture(this, this.graph.textures[i].path);
+		this.textInfo[this.graph.textures[i].id] = this.graph.textures[i];
 	}
 
 	//MATERIALS BLOCK
@@ -123,6 +123,10 @@ XMLscene.prototype.onGraphLoaded = function (){
       break;
     }
   }
+
+  //NODES
+  this.nodeRoot = this.graph.root;
+  this.nodes = this.graph.nodes;
 };
 
 XMLscene.prototype.display = function () {
@@ -157,7 +161,7 @@ XMLscene.prototype.display = function () {
 		for(var i = 0; i < this.graph.lights.length; i++){
 			this.lights[i].update();
 		}
-		this.drawNodes(this.graph.root, this.graph.nodes[this.graph.root][2],this.graph.nodes[this.graph.root][0], this.graph.nodes[this.graph.root][1]);
+		this.drawNodes(this.nodeRoot, this.nodes[this.nodeRoot].transformations,this.nodes[this.nodeRoot].material, this.nodes[this.nodeRoot].texture);
 		this.print = false;
     this.updateLights();
 	}
@@ -169,10 +173,10 @@ XMLscene.prototype.display = function () {
 };
 
 XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
-	var nodeInfo = this.graph.nodes[node];
+	var nodeInfo = this.nodes[node];
 
-	var materialNode = nodeInfo[0];
-	var textureNode = nodeInfo[1];
+	var materialNode = nodeInfo.material;
+	var textureNode = nodeInfo.texture;
 
 	if(materialNode == "null"){
 		materialNode = material;
@@ -183,16 +187,14 @@ XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
   else if(textureNode == "clear"){
     textureNode = "null";
   }
-	var geoTrans = nodeInfo[2];
-	var descendants = nodeInfo[3];
+	var geoTrans = nodeInfo.transformations;
+	var descendants = nodeInfo.descendants;
 
 	var newMatrix = mat4.create();
 	mat4.multiply(newMatrix, matrix, geoTrans);
 
-
 	for(var i = 0; i < descendants.length; i++){
 		var descendant = descendants[i];
-
 		if(this.leaves[descendant] == null){
 			this.drawNodes(descendant, newMatrix, materialNode, textureNode);
 		}
@@ -213,7 +215,7 @@ XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, texture
         if(textureName != "null"){
           this.textures[textureName].bind();
           if(this.leavesProperties[primitive].type == "rectangle" || this.leavesProperties[primitive].type == "triangle"){
-            this.leaves[primitive].updateTexCoords(this.textAmp[textureName][0], this.textAmp[textureName][1]);
+            this.leaves[primitive].updateTexCoords(this.textInfo[textureName].ampS, this.textInfo[textureName].ampT);
           }
         }
         this.leaves[primitive].display();

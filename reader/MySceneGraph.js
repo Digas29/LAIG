@@ -97,7 +97,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	}
 	var translation_tag = elems[0].children[1];
 	var translation = this.parser.getCoords(translation_tag);
-	mat4.translate(matrix, matrix, [translation[0], translation[1], translation[2]]);
+	mat4.translate(matrix, matrix, [translation.x, translation.y, translation.z]);
 
 	for(var i = 2; i < 5; i++){
 		var rotation_tag = elems[0].children[i];
@@ -121,7 +121,7 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	}
 	var scale_tag =  elems[0].children[5];
 	var scale = this.parser.getScaleCoords(scale_tag);
-	mat4.scale(matrix, matrix, [scale[0], scale[1], scale[2]]);
+	mat4.scale(matrix, matrix, [scale.x, scale.y, scale.z]);
 
 	this.initials.transformationMatrix = matrix;
 
@@ -147,7 +147,7 @@ MySceneGraph.prototype.parseIllumination= function(rootElement) {
 	}
 	var ambient_tag = elems[0].children[0];
 	var background_tag = elems[0].children[1];
-	
+
 	this.background = this.parser.getRGB(background_tag);
 	this.ambient = this.parser.getRGB(ambient_tag);
 }
@@ -195,14 +195,14 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	this.textures = [];
 	var nTextures = elems[0].children.length;
 	for(var i = 0; i < nTextures; i++){
-		var textureInfo = [];
+		var textureInfo = new TextureInfo();
 		var texture_tag = elems[0].children[i];
-		textureInfo[0] = this.parser.getString(texture_tag, "id");
+		textureInfo.id = this.parser.getString(texture_tag, "id");
 		var path_tag = texture_tag.children[0];
 		var amp_tag = texture_tag.children[1];
-		textureInfo[1] = this.fullFileName.substring(0, this.fullFileName.lastIndexOf("/")+1) + this.parser.getString(path_tag, "path");
-		textureInfo[2] = this.parser.getValue(amp_tag, "s");
-		textureInfo[3] = this.parser.getValue(amp_tag, "t");
+		textureInfo.path = this.fullFileName.substring(0, this.fullFileName.lastIndexOf("/")+1) + this.parser.getString(path_tag, "path");
+		textureInfo.ampS = this.parser.getValue(amp_tag, "s");
+		textureInfo.ampT = this.parser.getValue(amp_tag, "t");
 		this.textures[i] = textureInfo;
 	}
 }
@@ -286,7 +286,10 @@ MySceneGraph.prototype.parseNodes = function(rootElement) {
 	this.nodes = [];
 	for(i = 1; i < elems[0].children.length; i++){
 		var tempNode = this.parser.getNode(elems[0].children[i]);
-		this.nodes[tempNode[0]] = tempNode[1];
+		this.nodes[tempNode.id] = tempNode;
+	}
+	if(this.nodes[this.root] == undefined || this.nodes[this.root] == null){
+		return "NODES: Root node is not defined";
 	}
 }
 

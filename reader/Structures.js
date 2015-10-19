@@ -6,9 +6,6 @@ function Light(){
 	this.diffuse;
 	this.specular;
 }
-function Coords(){
-
-}
 function RGB(){
 	this.r;
 	this.g;
@@ -34,4 +31,11 @@ function Initials(){
 	this.frustumFar;
 	this.transformationMatrix;
 	this.axisLength;
+}
+
+function TextureInfo(){
+	this.path;
+	this.id;
+	this.ampS;
+	this.ampT;
 }

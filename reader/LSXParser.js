@@ -26,10 +26,11 @@ LSXParser.prototype.getRGB = function(tag){
 }
 
 LSXParser.prototype.getCoords = function(tag){
-	var coords = [];
-	coords[0] = this.getValue(tag, "x");
-	coords[1] = this.getValue(tag, "y");
-	coords[2] = this.getValue(tag, "z");
+	var coords = {
+		x: this.getValue(tag, "x"),
+		y: this.getValue(tag, "y"),
+		z: this.getValue(tag, "z")
+	};
 	return coords;
 }
 LSXParser.prototype.getAxis = function(tag){
@@ -39,16 +40,22 @@ LSXParser.prototype.getAngle = function(tag){
 	return (this.getValue(tag, "angle") * Math.PI / 180.0);
 }
 LSXParser.prototype.getScaleCoords = function(tag){
-	var coords = [];
-	coords[0] = this.getValue(tag, "sx");
-	coords[1] = this.getValue(tag, "sy");
-	coords[2] = this.getValue(tag, "sz");
+	var coords = {
+		x: this.getValue(tag, "sx"),
+		y: this.getValue(tag, "sy"),
+		z: this.getValue(tag, "sz")
+	};
 	return coords;
 }
 LSXParser.prototype.getLightPosition = function(tag){
 	var coords = this.getCoords(tag);
-	coords[3] = this.getValue(tag,"w");
-	return coords;
+	var position ={
+		x: coords.x,
+		y: coords.y,
+		z: coords.z,
+		w: this.getValue(tag, "w")
+	};
+	return position;
 }
 LSXParser.prototype.getPrimitive = function(tag){
 
@@ -65,11 +72,7 @@ LSXParser.prototype.getPrimitive = function(tag){
 }
 
 LSXParser.prototype.getNode = function(tag){
-	var node = [];
-	node[0] = this.getString(tag, "id");
-	var nodeInfo = [];
-	nodeInfo[0] = this.getString(tag.children[0], "id");
-	nodeInfo[1] = this.getString(tag.children[1], "id");
+
 	var matrix = mat4.create();
 	mat4.identity(matrix);
 	var i = 2;
@@ -77,36 +80,30 @@ LSXParser.prototype.getNode = function(tag){
 		switch(tag.children[i].tagName){
 		case 'TRANSLATION':
 			var translation = this.getCoords(tag.children[i]);
-			mat4.translate(matrix, matrix, [translation[0],translation[1], translation[2]]);
+			mat4.translate(matrix, matrix, [translation.x,translation.y, translation.z]);
 			break;
 		case 'SCALE':
 			var scale = this.getScaleCoords(tag.children[i]);
-			mat4.scale(matrix, matrix, [scale[0],scale[1], scale[2]]);
+			mat4.scale(matrix, matrix, [scale.x,scale.y, scale.z]);
 			break;
 		case 'ROTATION':
 			var axis = this.getAxis(tag.children[i]);
-			var rotation = [];
-			rotation[0] = this.getAngle(tag.children[i]);
-			rotation[1] = 0;
-			rotation[2] = 0;
-			rotation[3] = 0;
+			var angle = this.getAngle(tag.children[i]);
 			if(axis == "x"){
-				rotation[1] = 1.0;
+				mat4.rotate(matrix, matrix, angle, [1,0,0]);
 			}
 			else if(axis == "y"){
-				rotation[2] = 1.0;
+				mat4.rotate(matrix, matrix, angle, [0,1,0]);
 			}
 			else if(axis == "z"){
-				rotation[3] = 1.0;
+				mat4.rotate(matrix, matrix, angle, [0,0,1]);
 			}
-			mat4.rotate(matrix, matrix, rotation[0], [rotation[1],rotation[2], rotation[3]]);
 			break;
 		default:
 			break;
 		}
 		i++;
 	}
-	nodeInfo[2] = matrix;
 
 	var descendantTag = tag.children[i];
 	var descendants = [];
@@ -114,7 +111,12 @@ LSXParser.prototype.getNode = function(tag){
 		descendants[j] = this.getString(descendantTag.children[j], "id");
 	};
 
-	nodeInfo[3] = descendants;
-	node[1] = nodeInfo;
+	var node = {
+		id: this.getString(tag, "id"),
+		material: this.getString(tag.children[0], "id"),
+		texture: this.getString(tag.children[1], "id"),
+		transformations: matrix,
+		descendants: descendants
+	};
 	return node;
 }
