@@ -29,3 +29,9 @@ function Primitive(){
 	this.type;
 	this.args = [];
 }
+function Initials(){
+	this.frustumNear;
+	this.frustumFar;
+	this.transformationMatrix;
+	this.axisLength;
+}

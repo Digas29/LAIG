@@ -48,10 +48,10 @@ XMLscene.prototype.setDefaultAppearance = function () {
 XMLscene.prototype.onGraphLoaded = function (){
 	//INITIALS BLOCK
 
-	this.initialsTrans = this.graph.initialsTrans;
-	this.axis = new CGFaxis(this, this.graph.axisLength);
-  this.camera.near = this.graph.near;
-  this.camera.far = this.graph.far;
+	this.initialsTrans = this.graph.initials.transformationMatrix;
+	this.axis = new CGFaxis(this, this.graph.initials.axisLength);
+  this.camera.near = this.graph.initials.frustumNear;
+  this.camera.far = this.graph.initials.frustumFar;
 
 	//ILLUMINATON BLOCK
 	this.gl.clearColor(this.graph.background.r,this.graph.background.g,this.graph.background.b,this.graph.background.a);
@@ -123,7 +123,6 @@ XMLscene.prototype.onGraphLoaded = function (){
       break;
     }
   }
-  console.log(this.leaves);
 };
 
 XMLscene.prototype.display = function () {

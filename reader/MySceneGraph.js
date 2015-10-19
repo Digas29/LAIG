@@ -14,8 +14,8 @@ function MySceneGraph(filename, scene) {
 	* After the file is read, the reader calls onXMLReady on this object.
 	* If any error occurs, the reader calls onXMLError on this object, with an error message
 	*/
-
-	this.reader.open('scenes/'+filename, this);
+	this.fullFileName = 'scenes/'+filename;
+	this.reader.open(this.fullFileName, this);
 }
 
 /*
@@ -79,13 +79,22 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 	if (elems.length != 1) {
 		return "either zero or more than one 'INITIALS' element found.";
 	}
+	if(elems[0].children.length != 7){
+		return "either more or less tags found in the 'INITIALS' block than the expected";
+	}
+	this.initials = new Initials();
 	var matrix = mat4.create();
 	mat4.identity(matrix);
 
 	var frustum_tag = elems[0].children[0];
-	this.near = this.parser.getValue(frustum_tag, "near");
-	this.far = this.parser.getValue(frustum_tag, "far");
-
+	this.initials.frustumNear = this.parser.getValue(frustum_tag, "near");
+	if(this.initials.frustumNear == null || this.initials.frustumNear == undefined){
+		return "Please check frustum tag and see if it matches the <frustum near=\"ff\" far=\"ff\"/>";
+	}
+	this.initials.frustumFar = this.parser.getValue(frustum_tag, "far");
+	if(this.initials.frustumFar == null || this.initials.frustumFar == undefined){
+		return "Please check frustum tag and see if it matches the <frustum near=\"ff\" far=\"ff\"/>";
+	}
 	var translation_tag = elems[0].children[1];
 	var translation = this.parser.getCoords(translation_tag);
 	mat4.translate(matrix, matrix, [translation[0], translation[1], translation[2]]);
@@ -105,18 +114,23 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 			mat4.rotate(matrix, matrix, angle, [0, 0, 1]);
 			break;
 			default:
-			console.log("INITIALS rotation on axis " + axis + "is incorrect");
+			return("INITIALS rotation on axis " + axis + "is incorrect");
 		}
+
 
 	}
 	var scale_tag =  elems[0].children[5];
-	var reference_tag = elems[0].children[6];
-
-	this.axisLength = this.parser.getValue(reference_tag, "length");
-
 	var scale = this.parser.getScaleCoords(scale_tag);
 	mat4.scale(matrix, matrix, [scale[0], scale[1], scale[2]]);
-	this.initialsTrans = matrix;
+
+	this.initials.transformationMatrix = matrix;
+
+	var reference_tag = elems[0].children[6];
+	this.initials.axisLength = this.parser.getValue(reference_tag, "length");
+	if(this.initials.axisLength == null || this.initials.axisLength == undefined){
+		return "Please check INITIALS reference tag and see if it matches the <reference length=\"ff\" />";
+	}
+
 };
 
 MySceneGraph.prototype.parseIllumination= function(rootElement) {
@@ -128,8 +142,12 @@ MySceneGraph.prototype.parseIllumination= function(rootElement) {
 	if (elems.length != 1) {
 		return "either zero or more than one 'ILLUMINATION' element found.";
 	}
+	if(elems[0].children.length != 2){
+		return "either more or lessc children tags found than the expected in the 'INITIALS' block";
+	}
 	var ambient_tag = elems[0].children[0];
 	var background_tag = elems[0].children[1];
+	
 	this.background = this.parser.getRGB(background_tag);
 	this.ambient = this.parser.getRGB(ambient_tag);
 }
@@ -147,6 +165,9 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 	for(var i = 0; i < nLights; i++){
 		var lightValues = new Light();
 		var light = elems[0].children[i];
+		if(light.children.length != 5){
+			return "Please check light " + light + "some informations is missing";
+		}
 		var enable_tag = light.children[0];
 		var position_tag = light.children[1];
 		var ambient_tag = light.children[2];
@@ -179,7 +200,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 		textureInfo[0] = this.parser.getString(texture_tag, "id");
 		var path_tag = texture_tag.children[0];
 		var amp_tag = texture_tag.children[1];
-		textureInfo[1] = this.parser.getString(path_tag, "path");
+		textureInfo[1] = this.fullFileName.substring(0, this.fullFileName.lastIndexOf("/")+1) + this.parser.getString(path_tag, "path");
 		textureInfo[2] = this.parser.getValue(amp_tag, "s");
 		textureInfo[3] = this.parser.getValue(amp_tag, "t");
 		this.textures[i] = textureInfo;
