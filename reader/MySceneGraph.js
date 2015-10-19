@@ -10,7 +10,7 @@ function MySceneGraph(filename, scene) {
 	this.parser = new LSXParser();
 
 	/*
-	* Read the contents of the xml file, and refer to this class for loading and error handlers.
+	* Read the contents of the lsx file, and refer to this class for loading and error handlers.
 	* After the file is read, the reader calls onXMLReady on this object.
 	* If any error occurs, the reader calls onXMLError on this object, with an error message
 	*/
@@ -26,7 +26,7 @@ MySceneGraph.prototype.onXMLReady=function()
 	console.log("LSX Loading finished.");
 	var rootElement = this.reader.xmlDoc.documentElement;
 
-	// Here should go the calls for different functions to parse the various blocks
+	// Calls for different functions to parse the various blocks
 	var error = this.parseInitials(rootElement);
 	if (error != null) {
 		this.onXMLError(error);
@@ -68,7 +68,10 @@ MySceneGraph.prototype.onXMLReady=function()
 	this.scene.onGraphLoaded();
 };
 
-
+/*
+* Getting informations from INITIALS block
+* @param {string} LSX file
+*/
 MySceneGraph.prototype.parseInitials= function(rootElement) {
 
 	var elems =  rootElement.getElementsByTagName('INITIALS');
@@ -130,7 +133,10 @@ MySceneGraph.prototype.parseInitials= function(rootElement) {
 		return "Erro no INTIALS" + validade;
 	}
 };
-
+/*
+* Getting informations from ILLUMINATION block
+* @param {string} LSX file
+*/
 MySceneGraph.prototype.parseIllumination= function(rootElement) {
 	var elems =  rootElement.getElementsByTagName('ILLUMINATION');
 	if (elems == null) {
@@ -155,6 +161,10 @@ MySceneGraph.prototype.parseIllumination= function(rootElement) {
 		return "Erro no ILLUMINATION ambient " + validade;
 	}
 }
+/*
+* Getting informations from LIGHTS block
+* @param {string} LSX file
+*/
 MySceneGraph.prototype.parseLights = function(rootElement) {
 	var elems =  rootElement.getElementsByTagName('LIGHTS');
 	if (elems == null) {
@@ -193,6 +203,10 @@ MySceneGraph.prototype.parseLights = function(rootElement) {
 		console.log("Light with id=" + lightValues.id + " was processed successfuly.")
 	}
 }
+/*
+* Getting informations from TEXTURES block
+* @param {string} LSX file
+*/
 MySceneGraph.prototype.parseTextures = function(rootElement) {
 	var elems =  rootElement.getElementsByTagName('TEXTURES');
 	if (elems == null) {
@@ -223,6 +237,11 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 		this.textures[i] = textureInfo;
 	}
 }
+
+/*
+* Getting informations from MATERIAL block
+* @param {string} LSX file
+*/
 MySceneGraph.prototype.parseMaterials = function(rootElement) {
 	var elems =  rootElement.getElementsByTagName('MATERIALS');
 	if (elems == null) {
@@ -262,6 +281,11 @@ MySceneGraph.prototype.parseMaterials = function(rootElement) {
 	}
 	this.checkValid(this.materials[0]);
 }
+
+/*
+* Getting informations from LEAVES block
+* @param {string} LSX file
+*/
 MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 	var elems =  rootElement.getElementsByTagName('LEAVES');
 	if (elems == null) {
@@ -304,6 +328,10 @@ MySceneGraph.prototype.parsePrimitives = function(rootElement) {
 		}
 	}
 }
+/*
+* Getting informations from NODES block
+* @param {string} LSX file
+*/
 MySceneGraph.prototype.parseNodes = function(rootElement) {
 	var elems =  rootElement.getElementsByTagName('NODES');
 	if (elems == null) {
@@ -328,6 +356,11 @@ MySceneGraph.prototype.parseNodes = function(rootElement) {
 		return "NODES: Root node is not defined";
 	}
 }
+
+/*
+* Checking is there is any undefined field in a object
+* @param {object} object to be validated
+*/
 MySceneGraph.prototype.checkValid = function(object){
 	if(object == undefined){
 		return;

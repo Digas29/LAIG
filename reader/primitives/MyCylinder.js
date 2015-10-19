@@ -1,6 +1,12 @@
 /**
 * MyCylinder
 * @constructor
+* @param {CGFScene} cena da primitiva
+* @param {float} altura do cilindro
+* @param {float} raio da base
+* @param {float} raio do topo
+* @param {integer} numero de particoes em xz
+* @param {integer} numero de particoes em xy
 */
 function MyCylinder(scene, height, bRadius, tRadius, stacks, slices) {
   CGFobject.call(this,scene);

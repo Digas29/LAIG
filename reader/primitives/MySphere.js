@@ -1,11 +1,15 @@
 /**
- * MySphere 
- * @constructor
- */
+* MySphere
+* @constructor
+* @param {CGFScene} cena da primitiva
+* @param {float} raio
+* @param {integer} numero de particoes em xz
+* @param {integer} numero de particoes em xy
+*/
 
 function MySphere(scene, radius, stacks, slices) {
  	CGFobject.call(this,scene);
-	
+
 	this.radius = radius;
 	this.slices = slices;
 	this.stacks = stacks;
@@ -20,9 +24,9 @@ MySphere.prototype.initBuffers = function() {
 
  	this.vertices = [];
  	this.indices = [];
- 	this.normals = []; 
+ 	this.normals = [];
  	this.texCoords = [];
- 	
+
  	for (var latNumber = 0; latNumber <= this.stacks; latNumber++) {
       var theta = latNumber * Math.PI / this.stacks;
       var sinTheta = Math.sin(theta);

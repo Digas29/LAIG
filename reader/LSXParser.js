@@ -1,6 +1,10 @@
 function LSXParser(){
 }
-
+/*
+* Extract property integer or float from a tag
+* @param {string} tag with information
+* @param {string} property to be extracted
+*/
 LSXParser.prototype.getValue = function(tag, nameItem){
 	for(var i = 0 ;  i < tag.attributes.length; i++){
 		if(tag.attributes[i].name == nameItem){
@@ -9,6 +13,11 @@ LSXParser.prototype.getValue = function(tag, nameItem){
 	}
 	return undefined;
 }
+/*
+* Extract property string from a tag
+* @param {string} tag with information
+* @param {string} property to be extracted
+*/
 LSXParser.prototype.getString = function(tag, nameItem){
 	for(var i = 0 ;  i < tag.attributes.length; i++){
 		if(tag.attributes[i].name == nameItem){
@@ -17,6 +26,10 @@ LSXParser.prototype.getString = function(tag, nameItem){
 	}
 	return undefined;
 }
+/*
+* Extract property boolean from a tag
+* @param {string} tag with information
+*/
 LSXParser.prototype.getBoolean = function(tag){
 	 var value = this.getValue(tag,"value");
 	 if(value == 1.0){
@@ -29,6 +42,11 @@ LSXParser.prototype.getBoolean = function(tag){
 		 return undefined;
 	 }
 }
+/*
+* Extract rgb info from a tag
+* @param {string} tag with information
+* @return {object} object with rgb info
+*/
 LSXParser.prototype.getRGB = function(tag){
 	var rgb = {
 		r : this.getValue(tag, "r"),
@@ -38,7 +56,11 @@ LSXParser.prototype.getRGB = function(tag){
 	};
 	return rgb;
 }
-
+/*
+* Extract coordinates info from a tag
+* @param {string} tag with information
+* @return {object} object with coordinates info
+*/
 LSXParser.prototype.getCoords = function(tag){
 	var coords = {
 		x: this.getValue(tag, "x"),
@@ -47,12 +69,27 @@ LSXParser.prototype.getCoords = function(tag){
 	};
 	return coords;
 }
+/*
+* Extract axis info from a tag
+* @param {string} tag with information
+* @return {string} axis
+*/
 LSXParser.prototype.getAxis = function(tag){
 	return this.getString(tag, "axis");
 }
+/*
+* Extract angle info from a tag
+* @param {string} tag with information
+* @return {float} angle
+*/
 LSXParser.prototype.getAngle = function(tag){
 	return (this.getValue(tag, "angle") * Math.PI / 180.0);
 }
+/*
+* Extract scale coordinates info from a tag
+* @param {string} tag with information
+* @return {object} object with scale coordinates info
+*/
 LSXParser.prototype.getScaleCoords = function(tag){
 	var coords = {
 		x: this.getValue(tag, "sx"),
@@ -61,6 +98,11 @@ LSXParser.prototype.getScaleCoords = function(tag){
 	};
 	return coords;
 }
+/*
+* Extract light position info from a tag
+* @param {string} tag with information
+* @return {object} object with light position info
+*/
 LSXParser.prototype.getLightPosition = function(tag){
 	var coords = this.getCoords(tag);
 	var position ={
@@ -71,6 +113,11 @@ LSXParser.prototype.getLightPosition = function(tag){
 	};
 	return position;
 }
+/*
+* Extract leave info from a tag
+* @param {string} tag with information
+* @return {object} object with leave info
+*/
 LSXParser.prototype.getPrimitive = function(tag){
 
 	var primitive = new Primitive();
@@ -84,7 +131,11 @@ LSXParser.prototype.getPrimitive = function(tag){
 	}
 	return primitive;
 }
-
+/*
+* Extract node info from a tag
+* @param {string} tag with information
+* @return {object} object with node info
+*/
 LSXParser.prototype.getNode = function(tag){
 
 	var matrix = mat4.create();

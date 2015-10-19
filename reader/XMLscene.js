@@ -21,7 +21,6 @@ XMLscene.prototype.init = function (application) {
 
     this.enableTextures(true);
     this.axis = new CGFaxis(this);
-    this.print = true;
 };
 
 XMLscene.prototype.initLights = function () {
@@ -162,7 +161,6 @@ XMLscene.prototype.display = function () {
 			this.lights[i].update();
 		}
 		this.drawNodes(this.nodeRoot, this.nodes[this.nodeRoot].transformations,this.nodes[this.nodeRoot].material, this.nodes[this.nodeRoot].texture);
-		this.print = false;
     this.updateLights();
 	}
   else{
@@ -171,7 +169,13 @@ XMLscene.prototype.display = function () {
 
     this.shader.unbind();
 };
-
+/*
+* Recursive function to draw the scene loaded from the .lsx file
+* @param {string} id of node being processed
+* @param {mat4} matrix with current transformations
+* @param {string} id of the material of the current node
+* @param {string} id of the texture of the current node
+*/
 XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
 	var nodeInfo = this.nodes[node];
 
@@ -203,7 +207,13 @@ XMLscene.prototype.drawNodes = function(node, matrix, material, texture){
 		}
 	}
 };
-
+/*
+* Draws a primitive
+* @param {string} id of primitive being drawed
+* @param {mat4} matrix with current transformations
+* @param {string} id of the material of the primitive
+* @param {string} id of the texture of the primitive
+*/
 XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, textureName){
 
     this.pushMatrix();
@@ -226,7 +236,9 @@ XMLscene.prototype.drawPrimitive = function(primitive, matrix, material, texture
     }
 
 }
-
+/*
+* Update Lights from the interface values 
+*/
 XMLscene.prototype.updateLights = function(){
   for (var i = 0; i < this.graph.lights.length; i++) {
     if(this.graph.lights[i].enable){

@@ -1,7 +1,17 @@
 /**
- * MyTriangle
- * @constructor
- */
+* MyTrinagle
+* @constructor
+* @param {CGFScene} cena da primitiva
+* @param {float} x do ponto 1
+* @param {float} y do ponto 1
+* @param {float} z do ponto 1
+* @param {float} x do ponto 2
+* @param {float} y do ponto 2
+* @param {float} z do ponto 2
+* @param {float} x do ponto 3
+* @param {float} y do ponto 3
+* @param {float} z do ponto 3
+*/
 function MyTriangle(scene, x1, y1, z1, x2, y2, z2, x3, y3, z3) {
 	CGFobject.call(this,scene);
 	this.x1 = x1;
